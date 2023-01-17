@@ -42,7 +42,7 @@ With this API installed, an additional 'modded save file' will be created by the
 
 # Community Patches
 
-The following patches from the Inscryption modding community have been included in this package to improve the overall quality-of-life for modding and compatibility.
+The following patches from the Inscryption modding community are included in this package to improve the overall quality-of-life for modding and playing by adding compatibility features and fixing bugs.
 
 ## SigilArtPatch by MADH95Mods
 Fixes the art for abilities that previously only appeared in Act 2 so they appear correctly in Act 1 and Act 3
