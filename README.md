@@ -8,19 +8,20 @@ This plugin is a BepInEx plugin made for Inscryption as an API. This is the de-f
 It can currently create and modify:
 - Cards
 - Abilities
-- Appearance behaviours
-- Stat icons
+- Appearance Behaviours
+- Stat Icons
 - Challenges
 - Starter Decks
 - Regions
 - Encounters
 - Totem Tops
 - Consumable Items
+- Boss Masks
 - Gramophone Tracks
 - Talking Cards
 - And much more!
 
-Additionally, a number of quality-of-life patches from the community have been included in this release.
+Additionally, a number of community-made quality-of-life patches are included with each release.
 
 ## Installation (automated)
 This is the recommended way to install the API on the game.
@@ -34,7 +35,7 @@ To install this plugin first you need to install BepInEx as a mod loader for Ins
 
 To install Inscryption API you simply need to copy **InscryptionAPI.dll** from [releases](https://github.com/ScottWilson0903/InscryptionAPI/releases) to **Inscryption/BepInEx/plugins**.
 
-An example Mod utilising this plugin can be found [here](https://github.com/ScottWilson0903/InscryptionExampleMod).
+An example mod utilising this plugin can be found [here](https://github.com/debugman18/InscryptionExampleMod).
 
 ## Modded Save File
 With this API installed, an additional 'modded save file' will be created by the game. This file will be found in the 'BepInEx' subdirectory, and contains all save data created by mods that use this API. This file will not automatically be synced to the cloud by Steam.
@@ -70,15 +71,21 @@ If energy/mox cards are in the Act 1 pool, energy and mox card choice nodes will
 ## Sniper Sigil Fix by SpecialAPI
 Displays targets for attacks made with the sniper sigil in Act 1.
 
-## Act 1 Sentry Fixes by WhistleWind
+## Act 1 Sentry Sigil Fixes by WhistleWind
 Fixes a number of bugs caused by the Sentry ability being used in Act 1.
+
+## Full Pack Pack Rat Fix by WhistleWind
+Fixes the Pack Rat having the wrong card background when it is given to the player at an item node.
+
+## Campfire Failsafe by WhistleWind
+Adds a failsafe to the campfire node if the player has no cards that can be buffed.
 
 # Using the API
 
 Inscryption API 2.0 tries to have you use the original game's objects as much as possible. For example, there are no more 'NewCard' and 'CustomCard' objects; instead, you are responsible to create CardInfo objects yourself and add them.
 The API does provide a number of helper methods to make this process simpler for you.
 
-For more information, please check out the wiki: https://github.com/ScottWilson0903/InscryptionAPI/wiki
+For more information, please check out the wiki: https://inscryptionmodding.github.io/InscryptionAPI/wiki/
 
 ## Contribution
 
