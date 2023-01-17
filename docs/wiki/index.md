@@ -386,7 +386,7 @@ Unlike abilities, encounters are encoded into the game's data through a combinat
 
 To create a custom encounter (for example, a custom boss fight), you will need some combination of opponents, special sequencers, and AI.
 
-### Encounter turn plan
+### Encounter Turn Plan
 
 The card(s) that will be used in the encounter.
 ```c#
@@ -781,7 +781,7 @@ ConsumableItemManager.New(Plugin.PluginGuid, "Custom Item", "Does a thing!", tex
 		        .SetAct1();
 ```
 
-To add a card that has a card ina bottle use this
+To add a card in a bottle-type item use this:
 ```csharp
 ConsumableItemManager.NewCardInABottle(PluginGuid, cardInfo.name)
 			        .SetAct1();
@@ -795,9 +795,9 @@ ConsumableItemManager.New(Plugin.PluginGuid, "Custom Item", "Does a thing!", tex
 		        .SetAct1();
 ```
 
-## Adding a Custom Pelt
+## Custom Pelts
 
-This API supports adding a custom pelt to be sold by the trapper and traded by the trader.
+This API pelts that can be used at the Trapper and Trader.
 
 ```csharp
 CardInfo bonePeltInfo = CardManager.New(PluginGuid, "Bone Pelt", "Bone Pelt", 0, 2);
@@ -968,9 +968,9 @@ NOTE: Getting a prefab from an asset bundle does not laod it into the world. You
 
 ### Bugs
 
-#### 1. The GameObject is being create but the model won't show up!
+#### 1. The GameObject is being created but the model won't show up!
 
-Make sure you are using 2019.4.24f1 to build the asset bundle? If not the model won't show!
+Make sure you are using Unity 2019.4.24f1 to build the asset bundle. Otherwise the model won't show!
 
 ## Talking Cards
 This API supports creating new talking cards from scratch, without the need to load up your own Unity prefabs or anything of the sort!
