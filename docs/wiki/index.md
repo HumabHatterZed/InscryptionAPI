@@ -797,31 +797,24 @@ ConsumableItemManager.New(Plugin.PluginGuid, "Custom Item", "Does a thing!", tex
 
 ## Custom Pelts
 
-This API pelts that can be used at the Trapper and Trader.
+You can use the API to add custom pelts that can be used with the Trapper and Trader.
+This is done using the PeltManager, which will allow you to take a custom card and make it tradeable.
 
+By default, the cost of your pelt will be equal to the sum of its base price plus the current region tier, but this can be changed if so desired.
 ```csharp
-CardInfo bonePeltInfo = CardManager.New(PluginGuid, "Bone Pelt", "Bone Pelt", 0, 2);
-bonePeltInfo.portraitTex = TextureHelper.GetImageAsTexture(Path.Combine(PluginDirectory, "Art/portrait_skin_bone.png")).ConvertTexture();
-bonePeltInfo.cardComplexity = CardComplexity.Simple;
-bonePeltInfo.AddTraits(Trait.Pelt);
-bonePeltInfo.temple = CardTemple.Nature;
-bonePeltInfo.AddSpecialAbilities(SpecialTriggeredAbility.SpawnLice);
-bonePeltInfo.AddAppearances(CardAppearanceBehaviour.Appearance.TerrainBackground, CardAppearanceBehaviour.Appearance.TerrainLayout);
+// Before creating a custom pelt, you'll need to create the actual pelt card.
+CardInfo bonePeltInfo = CardManager.New(YourPluginGuid, "Bone Pelt", "Bone Pelt", atk: 0, hp: 2);
+bonePeltInfo.portraitTex = TextureHelper.GetImageAsTexture(Path.Combine(YourPluginDirectory, "Art/portrait_skin_bone.png")).ConvertTexture();
+bonePeltInfo.SetPelt(spawnLice: true);
 
-PeltManager.New(new PeltManager.CustomPeltData()
+// We now need to specify what cards the Trader will be able to offer the player for our custom pelt.
+Func<List<CardInfo>> getCardChoices = () =>
 {
-    AbilityCount = 0,
-    CostCallback = ()=>3,
-    AvailableAtTrader = true,
-    CardNameOfPelt = bonePeltInfo.name,
-    MaxChoices = 8,
-    PluginGUID = PluginGuid,
-    GetChoicesCallback = () =>
-    {
-        return CardManager.AllCardsCopy.FindAll((a) =>
-            a.BonesCost > 0 && a.temple == CardTemple.Nature);
-    },
-});
+    return CardManager.AllCardsCopy.FindAll(x => x.BonesCost > 0);
+};
+// Add our pelt to the game.
+// Pelts will cost 3 Teeth to buy from the Trapper, and cards offered by the Trader will have 0 extra abilities
+PeltManager.New(bonePeltInfo, getCardChoices, 3, 0);
 ```
 
 ## Sound
