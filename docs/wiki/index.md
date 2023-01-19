@@ -798,24 +798,32 @@ ConsumableItemManager.New(Plugin.PluginGuid, "Custom Item", "Does a thing!", tex
 ## Custom Pelts
 
 You can now make custom pelts that can be used with the Trapper and Trader using the API's PeltManager.
-
+To make a custom pelt, you need to first create the actual pelt card that will appear in the Trapper's shop.
+Once this is done, you can create your custom pelt using PeltManager.New(), as shown below.
+The API lets you modify the pelt's price and various aspects of it, as well as a number of other
 ```csharp
-// Before creating a custom pelt, you'll need to create the actual pelt card.
 CardInfo bonePeltInfo = CardManager.New(YourPluginGuid, "Bone Pelt", "Bone Pelt", atk: 0, hp: 2);
 bonePeltInfo.portraitTex = TextureHelper.GetImageAsTexture(Path.Combine(YourPluginDirectory, "Art/portrait_skin_bone.png")).ConvertTexture();
-bonePeltInfo.SetPelt(spawnLice: true);
+bonePeltInfo.SetPelt();
 
-// We now need to specify what cards the Trader will be able to offer the player for our custom pelt.
+// This function will be used to determine what cards you can get from the Trader in exchange for this pelt.
 Func<List<CardInfo>> getCardChoices = () =>
 {
     return CardManager.AllCardsCopy.FindAll(x => x.BonesCost > 0);
 };
-// Add our pelt to the game.
-// Pelts will cost 3 Teeth to buy from the Trapper, and cards offered by the Trader will have 0 extra abilities
+
+// This pelt will initially cost 3 Teeth to buy from the Trapper, and cards offered by the Trader will have 0 extra abilities
 PeltManager.New(bonePeltInfo, getCardChoices, 3, 0);
 ```
 
 Once a custom pelt is made, you can further modify it by chaining methods together, much like creating cards.
+
+```csharp
+// You can chain methods together
+PeltManager.New(bonePeltInfo, getCardChoices, 3, 0)
+    .SetMaxBuyPrice(20)
+    .SetBuyPriceAdjustment((int baseBuyPrice) => baseBuyPrice + RunState.CurrentRegionTier);
+```
 
 ## Sound
 
