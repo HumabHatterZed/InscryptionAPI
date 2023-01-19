@@ -797,10 +797,8 @@ ConsumableItemManager.New(Plugin.PluginGuid, "Custom Item", "Does a thing!", tex
 
 ## Custom Pelts
 
-You can use the API to add custom pelts that can be used with the Trapper and Trader.
-This is done using the PeltManager, which will allow you to take a custom card and make it tradeable.
+You can now make custom pelts that can be used with the Trapper and Trader using the API's PeltManager.
 
-By default, the cost of your pelt will be equal to the sum of its base price plus the current region tier, but this can be changed if so desired.
 ```csharp
 // Before creating a custom pelt, you'll need to create the actual pelt card.
 CardInfo bonePeltInfo = CardManager.New(YourPluginGuid, "Bone Pelt", "Bone Pelt", atk: 0, hp: 2);
@@ -816,6 +814,8 @@ Func<List<CardInfo>> getCardChoices = () =>
 // Pelts will cost 3 Teeth to buy from the Trapper, and cards offered by the Trader will have 0 extra abilities
 PeltManager.New(bonePeltInfo, getCardChoices, 3, 0);
 ```
+
+Once a custom pelt is made, you can further modify it by chaining methods together, much like creating cards.
 
 ## Sound
 
