@@ -1,8 +1,16 @@
 # Changelog
 
+## 2.11.0
+- Reduced amount of debug logs displayed in the console by default
+- Added config option to show all debug logs in the console
+- Added methods to aid in creating encounters' turn plans
+- Fixed SetOnePerDeck() and SetHideStats() being inaccessible
+- Fixed AddCardBlueprint() not setting the replacement card correctly
+- Minor punctuation fixes
+
 ## 2.10.0
-- Added LocalizationManager for more language support with mods
 - Completely revamped PeltManager to be more user friendly (mod-breaking)
+- Added LocalizationManager for more language support with mods
 - Added helper methods for custom pelts
 - Added new config option to force challenge screen arrows to appear at the top of the screen
 - Number of pelts offered by Trapper is now capped at 8
@@ -14,7 +22,7 @@
 
 ## 2.9.1
 - Fixed the campfire fix breaking the normal sequence
-- 
+
 ## 2.9.0
 - Added talking card support!
 - Moved the "CustomLine" struct outside of the Dialogue.Helpers class.
