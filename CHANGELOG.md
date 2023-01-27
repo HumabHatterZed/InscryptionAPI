@@ -2,15 +2,19 @@
 
 ## 2.10.0
 - Added LocalizationManager for more language support with mods
-- Completely revamped PeltManager to be more user friendly (Mod breaking)
-- Added helper method for custom pelts to change cards trader
-- Pelts offered by Trapper capped at 8.
-- Pelts offered by Trapper are now randomized if more than 8
-- Fixed soft lock at trader when having more pelts than cards to offer 
-- Fixed the campfire fix breaking the normal sequence
+- Completely revamped PeltManager to be more user friendly (mod-breaking)
+- Added helper methods for custom pelts
+- Added new config option to force challenge screen arrows to appear at the top of the screen
+- Number of pelts offered by Trapper is now capped at 8
+- Types of pelts offered by Trapper are now randomized if more than 8 exist
+- Fixed soft lock at Trader when having more pelts than cards to offer 
 - Fixed HasCardMetaCategory returning the inverse of its intended value
 - Fixed stackable sigils not showing numbers above 9
+- Fixed challenge screen arrows not appearing correctly for certain resolutions
 
+## 2.9.1
+- Fixed the campfire fix breaking the normal sequence
+- 
 ## 2.9.0
 - Added talking card support!
 - Moved the "CustomLine" struct outside of the Dialogue.Helpers class.
