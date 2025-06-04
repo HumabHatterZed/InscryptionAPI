@@ -1,6 +1,7 @@
 using DiskCardGame;
 using InscryptionAPI.Guid;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace InscryptionAPI.Encounters;
 
@@ -36,7 +37,7 @@ public static class AIManager
     private static List<FullAI> GenBaseGameAIsList()
     {
         List<FullAI> baseGame = new();
-        var gameAsm = typeof(AI).Assembly;
+        Assembly gameAsm = typeof(AI).Assembly;
         foreach (Type aiType in gameAsm.GetTypes().Where(type => type.IsSubclassOf(typeof(AI))))
         {
             baseGame.Add(new(aiType.Name, aiType));

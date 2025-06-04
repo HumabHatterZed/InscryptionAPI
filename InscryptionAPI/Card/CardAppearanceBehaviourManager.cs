@@ -1,6 +1,7 @@
 using DiskCardGame;
 using InscryptionAPI.Guid;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace InscryptionAPI.Card;
 
@@ -36,10 +37,10 @@ public static class CardAppearanceBehaviourManager
     private static List<FullCardAppearanceBehaviour> GenBaseGameAppearanceList()
     {
         List<FullCardAppearanceBehaviour> baseGame = new();
-        var gameAsm = typeof(CardAppearanceBehaviour).Assembly;
+        Assembly gameAsm = typeof(CardAppearanceBehaviour).Assembly;
         foreach (CardAppearanceBehaviour.Appearance ability in Enum.GetValues(typeof(CardAppearanceBehaviour.Appearance)))
         {
-            var name = ability.ToString();
+            string name = ability.ToString();
             baseGame.Add(new FullCardAppearanceBehaviour(ability, gameAsm.GetType($"DiskCardGame.{name}")));
         }
         return baseGame;

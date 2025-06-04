@@ -293,7 +293,7 @@ public static class TotemManager
 
     private static void InitializeDefaultTotemTop()
     {
-        byte[] resourceBytes = TextureHelper.GetResourceBytes("customtotemtop", typeof(InscryptionAPIPlugin).Assembly);
+        byte[] resourceBytes = TextureHelper.GetResourceBytes("customtotemtop", InscryptionAPIPlugin.APIAssembly);
         if (AssetBundleHelper.TryGet(resourceBytes, "CustomTotemTop", out GameObject go))
         {
             defaultTotemTop = NewTopPiece<CustomIconTotemTopPiece>("DefaultTotemTop",

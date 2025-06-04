@@ -8,8 +8,9 @@ using UnityEngine;
 
 namespace InscryptionCommunityPatch.Card;
 
-// Changes the Rulebook to display the correct number of turns for Fledgling
-
+/// <summary>
+/// Changes the Rulebook to display the correct number of turns for Fledgling
+/// </summary>
 [HarmonyPatch]
 internal static class EvolveDescriptionFixes
 {

@@ -13,7 +13,7 @@ internal class RandomConsumablePatch
     {
         if (SaveManager.SaveFile.IsPart2)
         {
-            PatchPlugin.Logger.LogInfo("Trinket Bearer is disabled in Act 2.");
+            PatchPlugin.Logger.LogMessage("Trinket Bearer is disabled in Act 2.");
             __result = false;
         }
     }

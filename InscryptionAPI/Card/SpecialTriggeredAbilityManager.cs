@@ -1,6 +1,7 @@
 using DiskCardGame;
 using InscryptionAPI.Guid;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace InscryptionAPI.Card;
 
@@ -45,10 +46,10 @@ public static class SpecialTriggeredAbilityManager
     private static List<FullSpecialTriggeredAbility> GenBaseGameSpecialTriggersList()
     {
         List<FullSpecialTriggeredAbility> baseGame = new();
-        var gameAsm = typeof(AbilityInfo).Assembly;
+        Assembly gameAsm = typeof(AbilityInfo).Assembly;
         foreach (SpecialTriggeredAbility ability in Enum.GetValues(typeof(SpecialTriggeredAbility)))
         {
-            var name = ability.ToString();
+            string name = ability.ToString();
             baseGame.Add(new(null, name, ability, gameAsm.GetType($"DiskCardGame.{name}")));
         }
         return baseGame;

@@ -109,4 +109,54 @@ public static partial class CardExtensions
         return card.OpponentCard ? OpponentGemsManager.Instance.HasGem(GemType.Blue) : ResourcesManager.Instance.HasGem(GemType.Blue);
     }
     public static bool IsUsingBlueGem(this PlayableCard card) => card.IsGemified() && card.OwnerHasBlueGem();
+
+    /// <summary>
+    /// Determines if this card provides its owner with a blue gem.
+    /// </summary>
+    /// <param name="card">Card to check</param>
+    public static bool ProvidesBlueGem(this PlayableCard card)
+    {
+        return card.HasAbility(Ability.GainGemTriple) || card.HasAbility(Ability.GainGemBlue);
+    }
+    /// <summary>
+    /// Determines if this card provides its owner with a green gem.
+    /// </summary>
+    /// <param name="card">Card to check</param>
+    public static bool ProvidesGreenGem(this PlayableCard card)
+    {
+        return card.HasAbility(Ability.GainGemTriple) || card.HasAbility(Ability.GainGemGreen);
+    }
+    /// <summary>
+    /// Determines if this card provides its owner with a orange gem.
+    /// </summary>
+    /// <param name="card">Card to check</param>
+    public static bool ProvidesOrangeGem(this PlayableCard card)
+    {
+        return card.HasAbility(Ability.GainGemTriple) || card.HasAbility(Ability.GainGemOrange);
+    }
+
+    /// <summary>
+    /// Determines if this card provides its owner with a blue gem.
+    /// </summary>
+    /// <param name="card">CardInfo to check</param>
+    public static bool ProvidesBlueGem(this CardInfo card)
+    {
+        return card.HasAbility(Ability.GainGemTriple) || card.HasAbility(Ability.GainGemBlue);
+    }
+    /// <summary>
+    /// Determines if this card provides its owner with a green gem.
+    /// </summary>
+    /// <param name="card">CardInfo to check</param>
+    public static bool ProvidesGreenGem(this CardInfo card)
+    {
+        return card.HasAbility(Ability.GainGemTriple) || card.HasAbility(Ability.GainGemGreen);
+    }
+    /// <summary>
+    /// Determines if this card provides its owner with a orange gem.
+    /// </summary>
+    /// <param name="card">CardInfo to check</param>
+    public static bool ProvidesOrangeGem(this CardInfo card)
+    {
+        return card.HasAbility(Ability.GainGemTriple) || card.HasAbility(Ability.GainGemOrange);
+    }
 }

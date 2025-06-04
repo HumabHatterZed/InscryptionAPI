@@ -3,6 +3,7 @@ using HarmonyLib;
 using InscryptionAPI.Guid;
 using InscryptionAPI.RuleBook;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using UnityEngine;
 
 namespace InscryptionAPI.Card;
@@ -84,10 +85,10 @@ public static class StatIconManager
     private static List<FullStatIcon> GenBaseGameStatIconList()
     {
         List<FullStatIcon> baseGame = new();
-        var gameAsm = typeof(AbilityInfo).Assembly;
+        Assembly gameAsm = typeof(AbilityInfo).Assembly;
         foreach (var staticon in Resources.LoadAll<StatIconInfo>("Data/staticons"))
         {
-            var name = staticon.iconType.ToString();
+            string name = staticon.iconType.ToString();
             SpecialTriggeredAbility ab = BASE_GAME_ABILITIES.ContainsKey(staticon.iconType) ? BASE_GAME_ABILITIES[staticon.iconType] : (SpecialTriggeredAbility)Enum.Parse(typeof(SpecialTriggeredAbility), staticon.iconType.ToString());
             baseGame.Add(new FullStatIcon(staticon.iconType, ab, staticon, gameAsm.GetType($"DiskCardGame.{name}")));
         }

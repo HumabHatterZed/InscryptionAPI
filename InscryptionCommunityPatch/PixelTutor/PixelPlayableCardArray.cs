@@ -244,7 +244,7 @@ public class PixelPlayableCardArray : ManagedBehaviour
         });
         displayedCards.Clear();
 
-        if (numRows <= 0)
+        if (numRows < 1)
         {
             PatchPlugin.Logger.LogDebug($"NumRows for PixelPlayableCardArray is 0, displaying no cards");
             yield break;

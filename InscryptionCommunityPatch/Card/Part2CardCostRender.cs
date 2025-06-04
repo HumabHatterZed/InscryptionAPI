@@ -25,7 +25,7 @@ public static class Part2CardCostRender
         PlayableCard playableCard,
         bool leftOriented)
     {
-        Debug.Log($"Use vanilla style");
+        //PatchPlugin.Logger.LogDebug($"Use vanilla style");
 
         Texture2D baseTexture;
         List<Texture2D> masterTextures;

@@ -469,13 +469,13 @@ public static class StackAbilityIcons
             countTransform = counter.transform;
         }
 
-        if (count <= 1)
+        if (count < 2)
             countTransform.gameObject.SetActive(false);
         else
         {
             countTransform.gameObject.SetActive(true);
-            PatchPlugin.Logger.LogDebug($"countTransform [{count - 1}]");
             countTransform.gameObject.GetComponent<SpriteRenderer>().sprite = GBC_NUMBER_SPRITES[count - 1];
+            PatchPlugin.Logger.LogDebug($"countTransform [{count - 1}]");
         }
     }
     private static Sprite OverridePixelSprite(AbilityInfo abilityInfo, CardInfo cardInfo, PlayableCard card)
@@ -492,9 +492,9 @@ public static class StackAbilityIcons
 
             Texture2D texture;
             if (abilityInfo.ability == Ability.Evolve)
-                texture = TextureHelper.GetImageAsTexture($"pixel_evolve_{pngIndex}.png", typeof(StackAbilityIcons).Assembly);
+                texture = TextureHelper.GetImageAsTexture($"pixel_evolve_{Mathf.Min(pngIndex, 6)}.png", typeof(StackAbilityIcons).Assembly);
             else
-                texture = TextureHelper.GetImageAsTexture($"pixel_transformer_{pngIndex}.png", typeof(StackAbilityIcons).Assembly);
+                texture = TextureHelper.GetImageAsTexture($"pixel_transformer_{Mathf.Min(pngIndex, 6)}.png", typeof(StackAbilityIcons).Assembly);
 
             return TextureHelper.ConvertTexture(texture, TextureHelper.SpriteType.PixelAbilityIcon);
         }
