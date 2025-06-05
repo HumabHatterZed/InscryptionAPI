@@ -262,14 +262,14 @@ internal static class CustomTriggerPatches
     [HarmonyPrefix]
     private static bool OpposingSlotsPrefix(PlayableCard __instance, ref List<CardSlot> __result, ref int __state)
     {
-        var all = CustomTriggerFinder.FindGlobalTriggers<ISetupAttackSequence>(true).ToList();
+        List<ISetupAttackSequence> all = CustomTriggerFinder.FindGlobalTriggers<ISetupAttackSequence>(true).ToList();
         all.RemoveAll(x => (x as TriggerReceiver) == null);
         all.Sort((x, x2) => x.GetTriggerPriority(__instance, OpposingSlotTriggerPriority.ReplacesDefaultOpposingSlot, new(), new(), 0, false) -
             x2.GetTriggerPriority(__instance, OpposingSlotTriggerPriority.ReplacesDefaultOpposingSlot, new(), new(), 0, false));
         bool didModify = false;
         bool discard = false;
         __state = 1;
-        foreach (var opposing in all)
+        foreach (ISetupAttackSequence opposing in all)
         {
             if (opposing.RespondsToModifyAttackSlots(__instance, OpposingSlotTriggerPriority.ReplacesDefaultOpposingSlot, new(), __result ?? new(), __state, false))
             {
@@ -278,13 +278,8 @@ internal static class CustomTriggerPatches
                 discard = false;
             }
         }
-        if (!didModify && __instance.HasAbility(Ability.AllStrike))
-        {
-            __state = Mathf.Max(1, (__instance.OpponentCard ? Singleton<BoardManager>.Instance.PlayerSlotsCopy : Singleton<BoardManager>.Instance.OpponentSlotsCopy).FindAll(x => x.Card != null &&
-                !__instance.CanAttackDirectly(x)).Count);
-        }
-        if (didModify)
-        {
+        
+        if (didModify) {
             if (__instance.HasAbility(Ability.SplitStrike))
             {
                 ProgressionData.SetAbilityLearned(Ability.SplitStrike);
@@ -306,8 +301,12 @@ internal static class CustomTriggerPatches
                 __result.Add(__instance.slot.opposingSlot);
             }
         }
-        if (__instance.HasAbility(Ability.SplitStrike))
-        {
+        else if (__instance.HasAbility(Ability.AllStrike)) {
+            __state = Mathf.Max(1, (__instance.OpponentCard ? Singleton<BoardManager>.Instance.PlayerSlotsCopy : Singleton<BoardManager>.Instance.OpponentSlotsCopy).FindAll(x => x.Card != null &&
+                !__instance.CanAttackDirectly(x)).Count);
+        }
+
+        if (__instance.HasAbility(Ability.SplitStrike)) {
             __state += 1;
         }
         if (__instance.HasTriStrike())
@@ -352,7 +351,7 @@ internal static class CustomTriggerPatches
         if (isAttackingDefaultSlot && removeDefaultAttackSlot)
             __result.Remove(defaultslot);
         bool didRemoveOriginalSlot = __instance.HasAbility(Ability.SplitStrike) && (!__instance.HasTriStrike() || removeDefaultAttackSlot);
-        var all = CustomTriggerFinder.FindGlobalTriggers<ISetupAttackSequence>(true).ToList();
+        List<ISetupAttackSequence> all = CustomTriggerFinder.FindGlobalTriggers<ISetupAttackSequence>(true).ToList();
         all.RemoveAll(x => (x as TriggerReceiver) == null);
         var dummyresult = __result; // used for sorting by trigger priority
         all.Sort((x, x2) => x.GetTriggerPriority(__instance, OpposingSlotTriggerPriority.Normal, original, dummyresult, __state, didRemoveOriginalSlot) -

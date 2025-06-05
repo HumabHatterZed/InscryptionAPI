@@ -366,8 +366,7 @@ public static class CustomTriggerFinder
     /// <returns>All trigger recievers of type T.</returns>
     public static IEnumerable<T> FindGlobalTriggers<T>(bool findFacedown, PlayableCard excluding = null)
     {
-        var result = Enumerable.Empty<T>();
-
+        IEnumerable<T> result = Enumerable.Empty<T>();
         if (BoardManager.Instance)
         {
             result = result.Concat(FindTriggersOnBoard<T>(findFacedown));
