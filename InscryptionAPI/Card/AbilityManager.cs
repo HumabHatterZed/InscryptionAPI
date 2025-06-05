@@ -731,13 +731,13 @@ public static class AbilityManager
         }
         return true;
     }
-    [HarmonyPrefix, HarmonyPatch(typeof(AbilitiesUtil), nameof(AbilitiesUtil.LoadAbilityIcon))]
-    private static bool OverrideEvolveAndTransformerIcon(ref Texture __result, string abilityName) {
-        if (abilityName.StartsWith("Evolve") || abilityName.StartsWith("Transformer")) {
-            return false;
-        }
-        return true;
-    }
+    //[HarmonyPrefix, HarmonyPatch(typeof(AbilitiesUtil), nameof(AbilitiesUtil.LoadAbilityIcon))]
+    //private static bool OverrideEvolveAndTransformerIcon(ref Texture __result, string abilityName) {
+    //    if (abilityName.StartsWith("Evolve") || abilityName.StartsWith("Transformer")) {
+    //        return false;
+    //    }
+    //    return true;
+    //}
     private static void OverrideEvolveDerivedIcon(Evolve evolve, int turnsLeftToEvolve)
     {
         if (evolve.Ability == Ability.Evolve)
