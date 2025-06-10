@@ -7,13 +7,13 @@ using UnityEngine;
 
 namespace InscryptionCommunityPatch.Card;
 
-//[HarmonyPatch]
 /// <summary>
 /// Modifies how card costs are rendered in Act to add support for mixed card costs, custom costs, and energy and Mox costs.
 /// </summary>
 public static class Part1CardCostRender
 {
     public static event Action<CardInfo, List<Texture2D>> UpdateCardCost;
+    public static event Action<PlayableCard, List<Texture2D>> UpdatePlayableCardCost;
 
     public static List<Texture2D> CostTextures(CardInfo cardInfo, PlayableCard playableCard, int bloodCost, int bonesCost, int energyCost, List<GemType> gemsCost)
     {
@@ -66,6 +66,7 @@ public static class Part1CardCostRender
 
         // Call the event and allow others to modify the list of textures
         UpdateCardCost?.Invoke(cardInfo, costTextures);
+        UpdatePlayableCardCost?.Invoke(playableCard, costTextures);
         return costTextures;
     }
 

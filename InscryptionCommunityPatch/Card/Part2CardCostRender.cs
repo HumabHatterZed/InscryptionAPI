@@ -15,7 +15,17 @@ namespace InscryptionCommunityPatch.Card;
 public static class Part2CardCostRender
 {
     public static event Action<CardInfo, List<Texture2D>> UpdateCardCost;
+    /// <summary>
+    /// For textures that are 24 x 13 in size.
+    /// </summary>
     public static event Action<CardInfo, List<Texture2D>> UpdateVanillaCardCost; // 24 x 13
+
+    public static event Action<PlayableCard, List<Texture2D>> UpdatePlayableCardCost;
+    /// <summary>
+    /// For textures that are 24 x 13 in size.
+    /// </summary>
+
+    public static event Action<PlayableCard, List<Texture2D>> UpdateVanillaPlayableCardCost;
 
     public static bool RightAct2Cost => PatchPlugin.rightAct2Cost.Value;
 
@@ -149,6 +159,7 @@ public static class Part2CardCostRender
 
         // Call the event and allow others to modify the list of textures
         UpdateCardCost?.Invoke(cardInfo, costTextures);
+        UpdateVanillaCardCost?.Invoke(cardInfo, costTextures);
         return costTextures;
     }
 
