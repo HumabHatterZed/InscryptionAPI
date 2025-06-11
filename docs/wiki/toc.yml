@@ -15,14 +15,16 @@ items:
 - name: Abilities
   href: ability_management.md
   items:
-  - name: Triggers and Interfaces
+  - name: Custom Triggers
     href: triggers.md
-  - name: Slot Modification
-    href: slots.md
-  - name: DamageShieldBehaviour
-    href: shield.md
   - name: Custom Sniper Logic
     href: sniper.md
+  - name: DamageShieldBehaviour
+    href: shield.md
+  - name: Slot Modifications
+    href: slots.md
+  - name: Trigger Order
+    href: triggers_priority.md
 - name: Custom Properties
   href: custom_properties.md
 - name: Ascension (Kaycee's Mod)
@@ -48,3 +50,5 @@ items:
   href: sound.md
 - name: Localisation
   href: localisation.md
+- name: Other Features
+  href: other_features.md

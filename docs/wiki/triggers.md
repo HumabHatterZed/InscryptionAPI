@@ -1,14 +1,19 @@
-## Triggers and Interfaces
+## Custom Triggers
 ---
-The API adds a number of interfaces you can use to add additional functionality to your ability.
-It also adds a new class: `ExtendedAbilityBehaviour`, which has all the interfaces already implemented for immediate use, saving you time.
+To give modders finer control over when abilities activate, the API adds a large number of custom triggers that you can add to your abilities or other trigger receivers via interfaces.
 
-### Passive Attack and Health Buffs
-To do this, you need to override GetPassiveAttackBuff(PlayableCard target) or GetPassiveAttackBuff(PlayableCard target) to calculate the appropriate buffs.
-These return an int representing the buff to give to 'target'.
+It also adds a new class: `ExtendedAbilityBehaviour`, which has several of these interfaces already implemented.
 
-In battle, the game will iterate across all cards on the board and check whether they should receive the buffs; this is what 'target' refers to; the current card being checked.
-You will need to write the logic for determining what cards should get the buff, as well as what buff they should receive.
+For comprehensive information on all custom triggers added by the API, refer to the documentation. If you want to understand the order all these triggers are called, look at the article 
+
+### Passive Stat Buffs
+Stat icons are a unique type of ability that modify a card's attack or health. Ants are the quintessential example of stat icons in use, and with the API you can add your very own.
+
+To do this, implement the IPassiveAttackBuff or IPassiveHealthBuff and implement the required methods. `GetPassiveAttackBuff(PlayableCard target)` or `GetPassiveAttackBuff(PlayableCard target)` are the methods you will use to calculate attack and health buffs respectively.
+
+In battle, the game will iterate across all cards on the board and check whether they should receive the buffs; this is what `target` refers to: the current card being checked, and NOT just the card with the custom sigil.
+
+You will need to write the logic for determining what cards should get the buff, as well as what buff they should receive. For example, if you want the buff to only be given to the card with the custom sigil, you will need to check that `target` equals the base card.
 
 Note: you need to be very careful about how complicated the logic is in GetPassiveAttackBuffs and GetPassiveHealthBuffs.
 These methods will be called *every frame* for *every instance of the ability!!*

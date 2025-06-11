@@ -2,9 +2,12 @@
 - Fixed error when trying to create cards that evolve/transform in 4 or more turns
 - Fixed Fledgling and Transformer sigil appearing as black boxes when a card evolves/transform in 4 or more turns
 - Fixed Part2VanillaCardCost event not being invoked
-- Evolve and Transformer icons now show support cards that evolve in 4 or more turns
 - Added 'UpdatePlayableCardCosts' event to community patch's Part1CardCostRender and Part2CardCostRender classes
 - Added extension methods for PlayableCard and CardInfo: ProvidesBlueGem, ProvidesGreenGem, ProvidesOrangeGem
+- Evolve and Transformer icons now support cards that evolve in 4 or more turns
+- Wiki: added articles 'Other Features' and 'Triggers and the Order of Operations'
+- Wiki: modified starting section of 'Custom Triggers' article
+- Documentation: fixed description for IPostCardGettingAttacked stating it triggers before CardGettingAttacked
 
 # 2.23.1
 - Fixed non-CardModificationInfo shields not breaking
