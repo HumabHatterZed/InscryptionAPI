@@ -23,6 +23,12 @@ public static class ShieldManager
     public static List<FullAbility> AllShieldAbilities { get; internal set; } = new(AllAbilities);
     public static List<AbilityInfo> AllShieldInfos { get; internal set; } = AllShieldAbilities.Select(x => x.Info).ToList();
 
+    /// <summary>
+    /// IEnumerator method that wraps BreakShield. Also contains code for triggering IShieldPreventedDamage and IShieldPreventedDamageInHand.
+    /// </summary>
+    /// <param name="target">Card getting attacked.</param>
+    /// <param name="damage">Damage being dealt.</param>
+    /// <param name="attacker">Card attacking the target.</param>
     public static IEnumerator TriggerBreakShield(PlayableCard target, int damage, PlayableCard attacker)
     {
         //InscryptionAPIPlugin.Logger.LogDebug("[TriggerBreakShield] Begin");
@@ -51,6 +57,9 @@ public static class ShieldManager
     /// The method used for when a shielded card is damaged. Includes extra parameters for modders looking to modify this further.
     /// This method is only called when damage > 0 and the target has a shield.
     /// </summary>
+    /// <param name="target">Card getting attacked.</param>
+    /// <param name="damage">Damage being dealt.</param>
+    /// <param name="attacker">Card attacking the target.</param>
     public static void BreakShield(PlayableCard target, int damage, PlayableCard attacker)
     {
         DamageShieldBehaviour shield = Array.Find(target.GetComponents<DamageShieldBehaviour>(), x => x.HasShields());
