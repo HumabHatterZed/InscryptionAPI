@@ -189,42 +189,33 @@ public static class ShieldManager
     }
     private static void CorrectHiddenAbilityRender(PlayableCard card)
     {
-        //foreach (DamageShieldBehaviour com in card.GetComponents<DamageShieldBehaviour>().Where(x => x.initialised))
-        //{
-        //    if (com.HasShields())
-        //    {
-        //        if (com.Ability.GetHideSingleStacks())
-        //        {
-        //            // if there are more hidden shields than there should be
-        //            while (card.Status.hiddenAbilities.Count(x => x == com.Ability) > com.NumShields)
-        //            {
-        //                card.Status.hiddenAbilities.Remove(com.Ability);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            card.Status.hiddenAbilities.RemoveAll(x => x == com.Ability);
-        //        }
-        //        break;
-        //    }
-        //    else
-        //    {
-        //        if (com.Ability.GetHideSingleStacks())
-        //        {
-        //            int shieldsLost = com.StartingNumShields - com.NumShields;
-        //            while (card.Status.hiddenAbilities.Count(x => x == com.Ability) < shieldsLost)
-        //            {
-        //                //Debug.Log($"{com.StartingNumShields} {com.NumShields} {shieldsLost} Add hidden");
-        //                card.Status.hiddenAbilities.Add(com.Ability);
-        //            }
-        //        }
-        //        else if (!card.Status.hiddenAbilities.Contains(com.Ability))
-        //        {
-        //            card.Status.hiddenAbilities.Add(com.Ability);
-        //        }
-        //        break;
-        //    }
-        //}
+/*        foreach (DamageShieldBehaviour com in card.GetComponents<DamageShieldBehaviour>().Where(x => x.initialised)) {
+            if (com.HasShields()) {
+                if (com.Ability.GetHideSingleStacks()) {
+                    // if there are more hidden shields than there should be
+                    while (card.Status.hiddenAbilities.Count(x => x == com.Ability) > com.NumShields) {
+                        card.Status.hiddenAbilities.Remove(com.Ability);
+                    }
+                }
+                else {
+                    card.Status.hiddenAbilities.RemoveAll(x => x == com.Ability);
+                }
+                break;
+            }
+            else {
+                if (com.Ability.GetHideSingleStacks()) {
+                    int shieldsLost = com.StartingNumShields - com.NumShields;
+                    while (card.Status.hiddenAbilities.Count(x => x == com.Ability) < shieldsLost) {
+                        //Debug.Log($"{com.StartingNumShields} {com.NumShields} {shieldsLost} Add hidden");
+                        card.Status.hiddenAbilities.Add(com.Ability);
+                    }
+                }
+                else if (!card.Status.hiddenAbilities.Contains(com.Ability)) {
+                    card.Status.hiddenAbilities.Add(com.Ability);
+                }
+                break;
+            }
+        }*/
 
         if (card.Info.HasBrokenShieldPortrait() && card.RenderInfo.portraitOverride == card.Info.BrokenShieldPortrait() && card.HasShield())
         {

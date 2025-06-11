@@ -820,7 +820,7 @@ public interface IShieldPreventedDamageInHand
     public int ShieldPreventedDamageInHandPriority(PlayableCard target, int damage, PlayableCard attacker);
 }
 /// <summary>
-/// Expanded version of CardGettingAttacked trigger, executed before it, that includes the attacker as an argument
+/// Expanded version of CardGettingAttacked trigger, executed after it, that includes the attacker as an argument
 /// </summary>
 public interface IPostCardGettingAttacked
 {
@@ -828,21 +828,3 @@ public interface IPostCardGettingAttacked
     public IEnumerator OnPostCardGettingAttacked(PlayableCard target, PlayableCard attacker);
     public int PostCardGettingAttackedPriority(PlayableCard target, PlayableCard attacker);
 }
-
-/*public interface IOnPreTakeDamageFromHammer
-{
-    public bool RespondsToPreTakeDamageFromHammer(HammerItem hammer, CardSlot targetSlot, GameObject firstPersonItem);
-
-    public IEnumerator OnPreTakeDamageFromHammer(HammerItem hammer, CardSlot targetSlot, GameObject firstPersonItem);
-
-    public int TriggerPriority(HammerItem hammer, CardSlot targetSlot, GameObject firstPersonItem);
-}
-
-public interface IOnPostTakeDamageFromHammer
-{
-    public bool RespondsToPostTakeDamageFromHammer(HammerItem hammer, CardSlot targetSlot, GameObject firstPersonItem, bool struckTarget);
-
-    public IEnumerator OnPostTakeDamageFromHammer(HammerItem hammer, CardSlot targetSlot, GameObject firstPersonItem, bool struckTarget);
-
-    public int TriggerPriority(HammerItem hammer, CardSlot targetSlot, GameObject firstPersonItem, bool struckTarget);
-}*/
