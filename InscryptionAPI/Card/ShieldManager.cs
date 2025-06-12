@@ -23,6 +23,12 @@ public static class ShieldManager
     public static List<FullAbility> AllShieldAbilities { get; internal set; } = new(AllAbilities);
     public static List<AbilityInfo> AllShieldInfos { get; internal set; } = AllShieldAbilities.Select(x => x.Info).ToList();
 
+    /// <summary>
+    /// IEnumerator method that wraps BreakShield. Also contains code for triggering IShieldPreventedDamage and IShieldPreventedDamageInHand.
+    /// </summary>
+    /// <param name="target">Card getting attacked.</param>
+    /// <param name="damage">Damage being dealt.</param>
+    /// <param name="attacker">Card attacking the target.</param>
     public static IEnumerator TriggerBreakShield(PlayableCard target, int damage, PlayableCard attacker)
     {
         //InscryptionAPIPlugin.Logger.LogDebug("[TriggerBreakShield] Begin");
@@ -51,6 +57,9 @@ public static class ShieldManager
     /// The method used for when a shielded card is damaged. Includes extra parameters for modders looking to modify this further.
     /// This method is only called when damage > 0 and the target has a shield.
     /// </summary>
+    /// <param name="target">Card getting attacked.</param>
+    /// <param name="damage">Damage being dealt.</param>
+    /// <param name="attacker">Card attacking the target.</param>
     public static void BreakShield(PlayableCard target, int damage, PlayableCard attacker)
     {
         DamageShieldBehaviour shield = Array.Find(target.GetComponents<DamageShieldBehaviour>(), x => x.HasShields());
@@ -189,42 +198,33 @@ public static class ShieldManager
     }
     private static void CorrectHiddenAbilityRender(PlayableCard card)
     {
-        //foreach (DamageShieldBehaviour com in card.GetComponents<DamageShieldBehaviour>().Where(x => x.initialised))
-        //{
-        //    if (com.HasShields())
-        //    {
-        //        if (com.Ability.GetHideSingleStacks())
-        //        {
-        //            // if there are more hidden shields than there should be
-        //            while (card.Status.hiddenAbilities.Count(x => x == com.Ability) > com.NumShields)
-        //            {
-        //                card.Status.hiddenAbilities.Remove(com.Ability);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            card.Status.hiddenAbilities.RemoveAll(x => x == com.Ability);
-        //        }
-        //        break;
-        //    }
-        //    else
-        //    {
-        //        if (com.Ability.GetHideSingleStacks())
-        //        {
-        //            int shieldsLost = com.StartingNumShields - com.NumShields;
-        //            while (card.Status.hiddenAbilities.Count(x => x == com.Ability) < shieldsLost)
-        //            {
-        //                //Debug.Log($"{com.StartingNumShields} {com.NumShields} {shieldsLost} Add hidden");
-        //                card.Status.hiddenAbilities.Add(com.Ability);
-        //            }
-        //        }
-        //        else if (!card.Status.hiddenAbilities.Contains(com.Ability))
-        //        {
-        //            card.Status.hiddenAbilities.Add(com.Ability);
-        //        }
-        //        break;
-        //    }
-        //}
+/*        foreach (DamageShieldBehaviour com in card.GetComponents<DamageShieldBehaviour>().Where(x => x.initialised)) {
+            if (com.HasShields()) {
+                if (com.Ability.GetHideSingleStacks()) {
+                    // if there are more hidden shields than there should be
+                    while (card.Status.hiddenAbilities.Count(x => x == com.Ability) > com.NumShields) {
+                        card.Status.hiddenAbilities.Remove(com.Ability);
+                    }
+                }
+                else {
+                    card.Status.hiddenAbilities.RemoveAll(x => x == com.Ability);
+                }
+                break;
+            }
+            else {
+                if (com.Ability.GetHideSingleStacks()) {
+                    int shieldsLost = com.StartingNumShields - com.NumShields;
+                    while (card.Status.hiddenAbilities.Count(x => x == com.Ability) < shieldsLost) {
+                        //Debug.Log($"{com.StartingNumShields} {com.NumShields} {shieldsLost} Add hidden");
+                        card.Status.hiddenAbilities.Add(com.Ability);
+                    }
+                }
+                else if (!card.Status.hiddenAbilities.Contains(com.Ability)) {
+                    card.Status.hiddenAbilities.Add(com.Ability);
+                }
+                break;
+            }
+        }*/
 
         if (card.Info.HasBrokenShieldPortrait() && card.RenderInfo.portraitOverride == card.Info.BrokenShieldPortrait() && card.HasShield())
         {

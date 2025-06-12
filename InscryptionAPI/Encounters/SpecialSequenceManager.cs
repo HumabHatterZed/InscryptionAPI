@@ -1,6 +1,7 @@
 using DiskCardGame;
 using InscryptionAPI.Guid;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace InscryptionAPI.Encounters;
 
@@ -38,7 +39,7 @@ public static class SpecialSequenceManager
     private static List<FullSpecialSequencer> GenBaseGameSpecialSequencersList()
     {
         List<FullSpecialSequencer> baseGame = new();
-        var gameAsm = typeof(SpecialBattleSequencer).Assembly;
+        Assembly gameAsm = typeof(SpecialBattleSequencer).Assembly;
         foreach (Type sequencer in gameAsm.GetTypes().Where(type => type.IsSubclassOf(typeof(SpecialBattleSequencer))))
         {
             baseGame.Add(new(sequencer.Name, sequencer));

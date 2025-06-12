@@ -16,6 +16,7 @@ using InscryptionAPI.Regions;
 using InscryptionAPI.RuleBook;
 using InscryptionAPI.Slots;
 using InscryptionAPI.Totems;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Assembly-CSharp")]
@@ -30,9 +31,11 @@ public class InscryptionAPIPlugin : BaseUnityPlugin
 {
     public const string ModGUID = "cyantist.inscryption.api";
     public const string ModName = "InscryptionAPI";
-    public const string ModVer = "2.23.1";
+    public const string ModVer = "2.23.2";
 
     public static string Directory = "";
+
+    internal static Assembly APIAssembly { get; private set; } = null;
 
     internal static ConfigEntry<bool> configOverrideArrows;
     internal static ConfigEntry<bool> configRandomChoiceOrder;
@@ -46,7 +49,7 @@ public class InscryptionAPIPlugin : BaseUnityPlugin
         {
             if (e.Name.StartsWith("API, Version=1"))
             {
-                return typeof(InscryptionAPIPlugin).Assembly;
+                return APIAssembly ??= typeof(InscryptionAPIPlugin).Assembly;
             }
             return null;
         };
@@ -67,7 +70,7 @@ public class InscryptionAPIPlugin : BaseUnityPlugin
         Logger = base.Logger;
         Directory = Path.GetDirectoryName(Info.Location);
 
-        HarmonyInstance.PatchAll(typeof(InscryptionAPIPlugin).Assembly);
+        HarmonyInstance.PatchAll(InscryptionAPIPlugin.APIAssembly);
     }
 
     private void OnDisable()
@@ -90,7 +93,7 @@ public class InscryptionAPIPlugin : BaseUnityPlugin
     internal static void CheckForOutdatedPlugins()
     {
         string outdatedPlugins = "";
-        foreach (var pluginAsm in Chainloader.PluginInfos.Values.Select(p => p.Instance.GetType().Assembly).Distinct())
+        foreach (Assembly pluginAsm in Chainloader.PluginInfos.Values.Select(p => p.Instance.GetType().Assembly).Distinct())
         {
             foreach (var refAsm in pluginAsm.GetReferencedAssemblies())
             {
@@ -108,6 +111,7 @@ public class InscryptionAPIPlugin : BaseUnityPlugin
 
     private void Awake()
     {
+        APIAssembly ??= typeof(InscryptionAPIPlugin).Assembly;
         configCustomTotemTopTypes = Config.Bind("Totems", "Top Types", TotemManager.TotemTopState.CustomTribes, "If Vanilla, don't change totem tops; if CustomTribes, added custom tribes will use custom totem tops; if AllTribes then all totem tops will use a custom top.");
         configCustomItemTypes = Config.Bind("Items", "Types", ConsumableItemManager.ConsumableState.Custom, "If Vanilla, only vanilla items will be used; if Custom, added custom items will use custom models; if All then all items will use a custom model.");
         configOverrideArrows = Config.Bind("Menus", "Override Arrows", false, "When true, forces the challenge screen arrows to appear at the top of the screen instead of the sides.");
@@ -125,10 +129,10 @@ public class InscryptionAPIPlugin : BaseUnityPlugin
         CardManager.AuditCardList();
         PixelCardManager.Initialise();
         PeltManager.CreateDialogueEvents();
-        if (!DialogueManager.CustomDialogue.Exists(x => x.DialogueEvent.id == "Hint_NotEnoughSameColourGemsHint"))
-        {
+        //if (!DialogueManager.CustomDialogue.Exists(x => x.DialogueEvent.id == "Hint_NotEnoughSameColourGemsHint"))
+        //{
 
-        }
+        //}
         Logger.LogDebug($"Inserted {DialogueManager.CustomDialogue.Count} dialogue event(s)!");
     }
 

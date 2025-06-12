@@ -61,7 +61,7 @@ public static class GeneratePortrait
 
     private static byte[] LoadResource(string resourceName)
     {
-        Assembly target = typeof(InscryptionAPIPlugin).Assembly;
+        Assembly target = InscryptionAPIPlugin.APIAssembly;
         using (Stream resourceStream = target.GetManifestResourceStream(resourceName))
         {
             using (MemoryStream memoryStream = new MemoryStream())

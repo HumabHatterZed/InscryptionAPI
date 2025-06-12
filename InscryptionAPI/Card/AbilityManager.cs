@@ -245,7 +245,7 @@ public static class AbilityManager
         }
 
         List<FullAbility> baseGame = new();
-        var gameAsm = typeof(AbilityInfo).Assembly;
+        Assembly gameAsm = typeof(AbilityInfo).Assembly;
         foreach (var ability in Resources.LoadAll<AbilityInfo>("Data/Abilities"))
         {
             string name = ability.ability.ToString();
@@ -719,18 +719,44 @@ public static class AbilityManager
 
         return codes;
     }
+    [HarmonyPrefix, HarmonyPatch(typeof(AbilityIconInteractable), nameof(AbilityIconInteractable.LoadIcon))]
+    private static bool OverrideTransformIcon(ref Texture __result, AbilityIconInteractable __instance, CardInfo info, AbilityInfo ability) {
+        if (ability.ability == Ability.Transformer && info?.evolveParams?.turnsToEvolve > 1) {
+            __result = TextureHelper.GetImageAsTexture($"ability_transformer_{Mathf.Min(info.evolveParams.turnsToEvolve, 6)}.png", InscryptionAPIPlugin.APIAssembly);
+            return false;
+        }
+        if (ability.ability == Ability.Evolve && info?.evolveParams?.turnsToEvolve > 3) {
+            __result = TextureHelper.GetImageAsTexture($"ability_evolve_{Mathf.Min(info.evolveParams.turnsToEvolve, 6)}.png", InscryptionAPIPlugin.APIAssembly);
+            return false;
+        }
+        return true;
+    }
+    //[HarmonyPrefix, HarmonyPatch(typeof(AbilitiesUtil), nameof(AbilitiesUtil.LoadAbilityIcon))]
+    //private static bool OverrideEvolveAndTransformerIcon(ref Texture __result, string abilityName) {
+    //    if (abilityName.StartsWith("Evolve") || abilityName.StartsWith("Transformer")) {
+    //        return false;
+    //    }
+    //    return true;
+    //}
     private static void OverrideEvolveDerivedIcon(Evolve evolve, int turnsLeftToEvolve)
     {
         if (evolve.Ability == Ability.Evolve)
         {
-            evolve.Card.RenderInfo.OverrideAbilityIcon(
-                Ability.Evolve, ResourceBank.Get<Texture>("Art/Cards/AbilityIcons/ability_evolve_" + turnsLeftToEvolve)
-                );
+            if (turnsLeftToEvolve > 3) {
+                evolve.Card.RenderInfo.OverrideAbilityIcon(
+                    Ability.Evolve, TextureHelper.GetImageAsTexture($"ability_evolve_{Mathf.Min(turnsLeftToEvolve, 6)}.png", InscryptionAPIPlugin.APIAssembly)
+                    );
+            }
+            else {
+                evolve.Card.RenderInfo.OverrideAbilityIcon(
+                    Ability.Evolve, ResourceBank.Get<Texture>("Art/Cards/AbilityIcons/ability_evolve_" + turnsLeftToEvolve)
+                    );
+            }
         }
         else if (evolve.Ability == Ability.Transformer && (evolve.Card.Info.evolveParams?.turnsToEvolve ?? 1) != 1)
         {
             evolve.Card.RenderInfo.OverrideAbilityIcon(
-                Ability.Transformer, TextureHelper.GetImageAsTexture($"ability_transformer_{turnsLeftToEvolve}.png", typeof(AbilityManager).Assembly)
+                Ability.Transformer, TextureHelper.GetImageAsTexture($"ability_transformer_{Mathf.Min(turnsLeftToEvolve, 6)}.png", InscryptionAPIPlugin.APIAssembly)
                 );
         }
     }
@@ -808,7 +834,7 @@ public static class AbilityManager
         if (turnsToEvolve <= 1)
             return;
 
-        __result = TextureHelper.GetImageAsTexture($"ability_transformer_{turnsToEvolve}.png", typeof(AbilityManager).Assembly);
+        __result = TextureHelper.GetImageAsTexture($"ability_transformer_{turnsToEvolve}.png", InscryptionAPIPlugin.APIAssembly);
     }
     #endregion
 

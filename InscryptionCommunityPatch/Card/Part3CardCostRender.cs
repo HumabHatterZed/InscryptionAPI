@@ -45,8 +45,7 @@ public static class Part3CardCostRender
 
         internal void UpdateDisplayedTextures()
         {
-            if (CostContainer != null)
-                CostContainer.DisplayCostOnContainer(MainCostTexture, EmissionTexture);
+            CostContainer?.DisplayCostOnContainer(MainCostTexture, EmissionTexture);
         }
 
         /// <summary>

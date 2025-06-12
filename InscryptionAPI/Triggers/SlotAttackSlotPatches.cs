@@ -101,27 +101,7 @@ public static class SlotAttackSlotPatches
         object opposingSlotOperand = codes.First(x => x.opcode == OpCodes.Ldfld && x.operand.ToString() == name_OpposingSlot).operand;
         
         // we want to slowly narrow our search until we find exactly where we want to insert our code
-        /*for (int a = 0; a < codes.Count; a++)
-        {
-            // separated into their own methods so I can save on eye strain and brain fog
-            if (ModifyDirectDamageCheck(codes, combatPhaseOperand, attackingSlotOperand, opposingSlotOperand, ref a))
-            {
-                for (int b = a; b < codes.Count; b++)
-                {
-                    if (CallTriggerOnDirectDamage(codes, opposingSlotOperand, ref b))
-                    {
-                        for (int c = b; c < codes.Count; c++)
-                        {
-                            if (OpposingCardNullCheck(codes, opposingSlotOperand, combatPhaseOperand, attackingSlotOperand, c))
-                                break;
-                        }
-                        break;
-                    }
-                }
-                break;
-            }
-        }*/
-
+        // transpiler separated into different methods for sake of clarity
         int a = ModifyDirectDamageCheck(codes, displayClassOperand, attackingSlotOperand, opposingSlotOperand);
         a = CallTriggerOnDirectDamage(codes, a, displayClassOperand, attackingSlotOperand, opposingSlotOperand);
         OpposingCardNullCheck(codes, a, opposingSlotOperand, displayClassOperand, attackingSlotOperand);

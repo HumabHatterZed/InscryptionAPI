@@ -11,8 +11,7 @@ namespace InscryptionAPI.Triggers;
 [HarmonyPatch]
 internal static class CustomTriggerPatches
 {
-    [HarmonyPatch(typeof(PlayerHand), nameof(PlayerHand.AddCardToHand))]
-    [HarmonyPostfix]
+    [HarmonyPostfix, HarmonyPatch(typeof(PlayerHand), nameof(PlayerHand.AddCardToHand))]
     private static IEnumerator TriggerOnAddedToHand(IEnumerator result, PlayableCard card)
     {
         yield return result;
@@ -21,8 +20,8 @@ internal static class CustomTriggerPatches
         yield break;
     }
 
-    [HarmonyPatch(typeof(CombatPhaseManager), nameof(CombatPhaseManager.DoCombatPhase))]
-    [HarmonyPostfix]
+    #region Combat Triggers
+    [HarmonyPostfix, HarmonyPatch(typeof(CombatPhaseManager), nameof(CombatPhaseManager.DoCombatPhase))]
     private static IEnumerator TriggerOnBellRung(IEnumerator result, bool playerIsAttacker)
     {
         yield return CustomTriggerFinder.TriggerAll<IOnBellRung>(false, x => x.RespondsToBellRung(playerIsAttacker), x => x.OnBellRung(playerIsAttacker));
@@ -30,8 +29,7 @@ internal static class CustomTriggerPatches
         yield break;
     }
 
-    [HarmonyPatch(typeof(CombatPhaseManager), nameof(CombatPhaseManager.SlotAttackSequence))]
-    [HarmonyPostfix]
+    [HarmonyPostfix, HarmonyPatch(typeof(CombatPhaseManager), nameof(CombatPhaseManager.SlotAttackSequence))]
     private static IEnumerator TriggerOnSlotAttackSequence(IEnumerator result, CardSlot slot)
     {
         yield return CustomTriggerFinder.TriggerAll<IOnPreSlotAttackSequence>(false, x => x.RespondsToPreSlotAttackSequence(slot), x => x.OnPreSlotAttackSequence(slot));
@@ -40,22 +38,22 @@ internal static class CustomTriggerPatches
         yield break;
     }
 
-    [HarmonyPatch(typeof(CombatPhaseManager), nameof(CombatPhaseManager.SlotAttackSlot))]
-    [HarmonyPostfix]
+    [HarmonyPostfix, HarmonyPatch(typeof(CombatPhaseManager), nameof(CombatPhaseManager.SlotAttackSlot))]
     private static IEnumerator TriggerOnPostSingularSlotAttackSlot(IEnumerator result, CardSlot attackingSlot, CardSlot opposingSlot)
     {
         yield return result;
         yield return CustomTriggerFinder.TriggerAll<IOnPostSingularSlotAttackSlot>(false, x => x.RespondsToPostSingularSlotAttackSlot(attackingSlot, opposingSlot), x => x.OnPostSingularSlotAttackSlot(attackingSlot, opposingSlot));
         yield break;
     }
+    #endregion
 
+    #region Scale Patch
     private static Type scaleChangedCoroutine;
     private static FieldInfo scaleChangedDamage;
     private static FieldInfo scaleChangedToPlayer;
     private static FieldInfo scaleChangedNumWeights;
 
-    [HarmonyPatch(typeof(LifeManager), nameof(LifeManager.ShowDamageSequence))]
-    [HarmonyPostfix]
+    [HarmonyPostfix, HarmonyPatch(typeof(LifeManager), nameof(LifeManager.ShowDamageSequence))]
     private static IEnumerator TriggerOnScalesChanged(IEnumerator result, int damage, int numWeights, bool toPlayer)
     {
         int initialDamage = damage;
@@ -82,18 +80,10 @@ internal static class CustomTriggerPatches
             x.OnPostScalesChanged(damage, toPlayer, initialDamage, initialToPlayer));
         yield break;
     }
+    #endregion
 
-    [HarmonyPatch(typeof(TurnManager), nameof(TurnManager.DoUpkeepPhase))]
-    [HarmonyPostfix]
-    private static IEnumerator TriggerOnUpkeepInHand(IEnumerator result, bool playerUpkeep)
-    {
-        yield return result;
-        yield return CustomTriggerFinder.TriggerInHand<IOnUpkeepInHand>(x => x.RespondsToUpkeepInHand(playerUpkeep), x => x.OnUpkeepInHand(playerUpkeep));
-        yield break;
-    }
-
-    [HarmonyPatch(typeof(BoardManager), nameof(BoardManager.ResolveCardOnBoard))]
-    [HarmonyPostfix]
+    #region Resolve and Slot Assignment
+    [HarmonyPostfix, HarmonyPatch(typeof(BoardManager), nameof(BoardManager.ResolveCardOnBoard))]
     private static IEnumerator TriggerOnOtherCardResolveInHand(IEnumerator result, PlayableCard card, bool resolveTriggers = true)
     {
         yield return result;
@@ -104,30 +94,7 @@ internal static class CustomTriggerPatches
         yield break;
     }
 
-    [HarmonyPatch(typeof(TurnManager), nameof(TurnManager.PlayerTurn))]
-    [HarmonyPostfix]
-    private static IEnumerator TriggerOnTurnEndInHandPlayer(IEnumerator result)
-    {
-        yield return result;
-        yield return CustomTriggerFinder.TriggerInHand<IOnTurnEndInHand>(x => x.RespondsToTurnEndInHand(true), x => x.OnTurnEndInHand(true));
-        yield break;
-    }
-
-    [HarmonyPatch(typeof(TurnManager), nameof(TurnManager.OpponentTurn))]
-    [HarmonyPostfix]
-    private static IEnumerator TriggerOnTurnEndInHandOpponent(IEnumerator result, TurnManager __instance)
-    {
-        bool turnSkipped = __instance.Opponent.SkipNextTurn;
-        yield return result;
-        if (!turnSkipped)
-        {
-            yield return CustomTriggerFinder.TriggerInHand<IOnTurnEndInHand>(x => x.RespondsToTurnEndInHand(false), x => x.OnTurnEndInHand(false));
-        }
-        yield break;
-    }
-
-    [HarmonyPatch(typeof(BoardManager), nameof(BoardManager.AssignCardToSlot))]
-    [HarmonyPostfix]
+    [HarmonyPostfix, HarmonyPatch(typeof(BoardManager), nameof(BoardManager.AssignCardToSlot))]
     private static IEnumerator TriggerOnOtherCardAssignedToSlotInHand(IEnumerator result, PlayableCard card, bool resolveTriggers)
     {
         CardSlot slot2 = card.Slot;
@@ -147,11 +114,12 @@ internal static class CustomTriggerPatches
         }
         yield break;
     }
+    #endregion
 
+    #region OnDie
     private static FieldInfo triggerField;
 
-    [HarmonyPatch(typeof(PlayableCard), nameof(PlayableCard.Die))]
-    [HarmonyPostfix]
+    [HarmonyPostfix, HarmonyPatch(typeof(PlayableCard), nameof(PlayableCard.Die))]
     private static IEnumerator TriggerDeathTriggers(IEnumerator result, PlayableCard __instance, bool wasSacrifice, PlayableCard killer = null)
     {
         CardSlot slotBeforeDeath = __instance.Slot;
@@ -180,6 +148,7 @@ internal static class CustomTriggerPatches
         }
         yield break;
     }
+    #endregion
 
     [HarmonyPatch(typeof(ConsumableItemSlot), nameof(ConsumableItemSlot.ConsumeItem))]
     [HarmonyPostfix]
@@ -228,6 +197,7 @@ internal static class CustomTriggerPatches
         yield break;
     }
 
+    #region Passive Stat Buffs
     [HarmonyPatch(typeof(PlayableCard), nameof(PlayableCard.GetPassiveAttackBuffs))]
     [HarmonyPostfix]
     private static void PassiveAttackBuffs(PlayableCard __instance, ref int __result)
@@ -257,19 +227,21 @@ internal static class CustomTriggerPatches
         }
         __result = dummyResult;
     }
+    #endregion
 
+    #region GetOpposingSlots
     [HarmonyPatch(typeof(PlayableCard), nameof(PlayableCard.GetOpposingSlots))]
     [HarmonyPrefix]
     private static bool OpposingSlotsPrefix(PlayableCard __instance, ref List<CardSlot> __result, ref int __state)
     {
-        var all = CustomTriggerFinder.FindGlobalTriggers<ISetupAttackSequence>(true).ToList();
+        List<ISetupAttackSequence> all = CustomTriggerFinder.FindGlobalTriggers<ISetupAttackSequence>(true).ToList();
         all.RemoveAll(x => (x as TriggerReceiver) == null);
         all.Sort((x, x2) => x.GetTriggerPriority(__instance, OpposingSlotTriggerPriority.ReplacesDefaultOpposingSlot, new(), new(), 0, false) -
             x2.GetTriggerPriority(__instance, OpposingSlotTriggerPriority.ReplacesDefaultOpposingSlot, new(), new(), 0, false));
         bool didModify = false;
         bool discard = false;
         __state = 1;
-        foreach (var opposing in all)
+        foreach (ISetupAttackSequence opposing in all)
         {
             if (opposing.RespondsToModifyAttackSlots(__instance, OpposingSlotTriggerPriority.ReplacesDefaultOpposingSlot, new(), __result ?? new(), __state, false))
             {
@@ -278,13 +250,8 @@ internal static class CustomTriggerPatches
                 discard = false;
             }
         }
-        if (!didModify && __instance.HasAbility(Ability.AllStrike))
-        {
-            __state = Mathf.Max(1, (__instance.OpponentCard ? Singleton<BoardManager>.Instance.PlayerSlotsCopy : Singleton<BoardManager>.Instance.OpponentSlotsCopy).FindAll(x => x.Card != null &&
-                !__instance.CanAttackDirectly(x)).Count);
-        }
-        if (didModify)
-        {
+        
+        if (didModify) {
             if (__instance.HasAbility(Ability.SplitStrike))
             {
                 ProgressionData.SetAbilityLearned(Ability.SplitStrike);
@@ -306,8 +273,12 @@ internal static class CustomTriggerPatches
                 __result.Add(__instance.slot.opposingSlot);
             }
         }
-        if (__instance.HasAbility(Ability.SplitStrike))
-        {
+        else if (__instance.HasAbility(Ability.AllStrike)) {
+            __state = Mathf.Max(1, (__instance.OpponentCard ? Singleton<BoardManager>.Instance.PlayerSlotsCopy : Singleton<BoardManager>.Instance.OpponentSlotsCopy).FindAll(x => x.Card != null &&
+                !__instance.CanAttackDirectly(x)).Count);
+        }
+
+        if (__instance.HasAbility(Ability.SplitStrike)) {
             __state += 1;
         }
         if (__instance.HasTriStrike())
@@ -331,12 +302,11 @@ internal static class CustomTriggerPatches
     private static void OpposingSlots(PlayableCard __instance, ref List<CardSlot> __result, int __state)
     {
         List<CardSlot> original = new(__result);
-        bool isAttackingDefaultSlot = !__instance.HasTriStrike() && !__instance.HasAbility(Ability.SplitStrike);
         CardSlot defaultslot = __instance.Slot.opposingSlot;
+        bool isAttackingDefaultSlot = !__instance.HasTriStrike() && !__instance.HasAbility(Ability.SplitStrike);
 
-        List<CardSlot> alteredOpposings = new();
         bool removeDefaultAttackSlot = false;
-
+        List<CardSlot> alteredOpposings = new();
         foreach (IGetOpposingSlots component in CustomTriggerFinder.FindTriggersOnCard<IGetOpposingSlots>(__instance))
         {
             if ((component as TriggerReceiver) != null && component.RespondsToGetOpposingSlots())
@@ -351,8 +321,9 @@ internal static class CustomTriggerPatches
 
         if (isAttackingDefaultSlot && removeDefaultAttackSlot)
             __result.Remove(defaultslot);
+
         bool didRemoveOriginalSlot = __instance.HasAbility(Ability.SplitStrike) && (!__instance.HasTriStrike() || removeDefaultAttackSlot);
-        var all = CustomTriggerFinder.FindGlobalTriggers<ISetupAttackSequence>(true).ToList();
+        List<ISetupAttackSequence> all = CustomTriggerFinder.FindGlobalTriggers<ISetupAttackSequence>(true).ToList();
         all.RemoveAll(x => (x as TriggerReceiver) == null);
         var dummyresult = __result; // used for sorting by trigger priority
         all.Sort((x, x2) => x.GetTriggerPriority(__instance, OpposingSlotTriggerPriority.Normal, original, dummyresult, __state, didRemoveOriginalSlot) -
@@ -390,6 +361,33 @@ internal static class CustomTriggerPatches
         }
         __result.Sort((CardSlot a, CardSlot b) => a.Index - b.Index);
     }
+    #endregion
+
+    #region Upkeep and TurnEnd
+    [HarmonyPostfix, HarmonyPatch(typeof(TurnManager), nameof(TurnManager.DoUpkeepPhase))]
+    private static IEnumerator TriggerOnUpkeepInHand(IEnumerator result, bool playerUpkeep) {
+        yield return result;
+        yield return CustomTriggerFinder.TriggerInHand<IOnUpkeepInHand>(x => x.RespondsToUpkeepInHand(playerUpkeep), x => x.OnUpkeepInHand(playerUpkeep));
+        yield break;
+    }
+
+    [HarmonyPatch(typeof(TurnManager), nameof(TurnManager.PlayerTurn))]
+    [HarmonyPostfix]
+    private static IEnumerator TriggerOnTurnEndInHandPlayer(IEnumerator result) {
+        yield return result;
+        yield return CustomTriggerFinder.TriggerInHand<IOnTurnEndInHand>(x => x.RespondsToTurnEndInHand(true), x => x.OnTurnEndInHand(true));
+        yield break;
+    }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(TurnManager), nameof(TurnManager.OpponentTurn))]
+    private static IEnumerator TriggerOnTurnEndInHandOpponent(IEnumerator result, TurnManager __instance) {
+        bool turnSkipped = __instance.Opponent.SkipNextTurn;
+        yield return result;
+        if (!turnSkipped) {
+            yield return CustomTriggerFinder.TriggerInHand<IOnTurnEndInHand>(x => x.RespondsToTurnEndInHand(false), x => x.OnTurnEndInHand(false));
+        }
+        yield break;
+    }
 
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(TurnManager), "PlayerTurn", MethodType.Enumerator)]
@@ -424,6 +422,7 @@ internal static class CustomTriggerPatches
                 yield return trigger.OnTurnEndInQueue(playerTurn);
         }
     }
+    #endregion
 
     [HarmonyPatch(typeof(GlobalTriggerHandler), nameof(GlobalTriggerHandler.TriggerNonCardReceivers)), HarmonyPostfix]
     private static IEnumerator TriggerSlotModificationHandlers(IEnumerator sequence, bool beforeCards, Trigger trigger, params object[] otherArgs)

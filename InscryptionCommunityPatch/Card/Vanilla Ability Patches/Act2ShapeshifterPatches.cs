@@ -54,10 +54,15 @@ internal static class Act2ShapeshifterPatches
     {
         if (SaveManager.SaveFile.IsPart2)
         {
-            PatchPlugin.Logger.LogInfo($"GetIjiraqDisguises: Act2:{SaveData.Data.collection.CardInfos.Count}");
+            if (PatchPlugin.configFullDebug.Value)
+                PatchPlugin.Logger.LogDebug($"GetIjiraqDisguises: Act2:{SaveData.Data.collection.CardInfos.Count}");
+            
             return new(SaveData.Data.collection.CardInfos);
         }
-        PatchPlugin.Logger.LogInfo($"GetIjiraqDisguises: DeckCount:{RunState.Run.playerDeck.Cards.Count}");
+
+        if (PatchPlugin.configFullDebug.Value)
+            PatchPlugin.Logger.LogDebug($"GetIjiraqDisguises: DeckCount:{RunState.Run.playerDeck.Cards.Count}");
+        
         return new(RunState.Run.playerDeck.Cards);
     }
 }

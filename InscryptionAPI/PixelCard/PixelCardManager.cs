@@ -36,10 +36,10 @@ public static class PixelCardManager // code courtesy of Nevernamed and James/ke
     }
     internal static void Initialise()
     {
-        PixelGemifiedDecal = TextureHelper.GetImageAsSprite("PixelGemifiedDecal.png", typeof(PixelCardManager).Assembly, TextureHelper.SpriteType.PixelDecal);
-        PixelGemifiedOrangeLit = TextureHelper.GetImageAsSprite("PixelGemifiedOrange.png", typeof(PixelCardManager).Assembly, TextureHelper.SpriteType.PixelDecal);
-        PixelGemifiedGreenLit = TextureHelper.GetImageAsSprite("PixelGemifiedGreen.png", typeof(PixelCardManager).Assembly, TextureHelper.SpriteType.PixelDecal);
-        PixelGemifiedBlueLit = TextureHelper.GetImageAsSprite("PixelGemifiedBlue.png", typeof(PixelCardManager).Assembly, TextureHelper.SpriteType.PixelDecal);
+        PixelGemifiedDecal = TextureHelper.GetImageAsSprite("PixelGemifiedDecal.png", InscryptionAPIPlugin.APIAssembly, TextureHelper.SpriteType.PixelDecal);
+        PixelGemifiedOrangeLit = TextureHelper.GetImageAsSprite("PixelGemifiedOrange.png", InscryptionAPIPlugin.APIAssembly, TextureHelper.SpriteType.PixelDecal);
+        PixelGemifiedGreenLit = TextureHelper.GetImageAsSprite("PixelGemifiedGreen.png", InscryptionAPIPlugin.APIAssembly, TextureHelper.SpriteType.PixelDecal);
+        PixelGemifiedBlueLit = TextureHelper.GetImageAsSprite("PixelGemifiedBlue.png", InscryptionAPIPlugin.APIAssembly, TextureHelper.SpriteType.PixelDecal);
     }
 
     [HarmonyPostfix, HarmonyPatch(typeof(CardAppearanceBehaviour), nameof(CardAppearanceBehaviour.Card), MethodType.Getter)]
