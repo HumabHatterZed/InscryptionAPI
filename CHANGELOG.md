@@ -1,3 +1,6 @@
+# 2.23.3
+- Fixed custom deck exhaust sequence not performing the requisite checks
+
 # 2.23.2
 - Fixed error when trying to create cards that evolve/transform in 4 or more turns
 - Fixed Fledgling and Transformer sigil appearing as black boxes when a card evolves/transform in 4 or more turns

@@ -255,7 +255,7 @@ public static class OpponentManager
     [HarmonyPostfix, HarmonyPatch(typeof(CardDrawPiles), nameof(CardDrawPiles.ExhaustedSequence))]
     private static IEnumerator CustomBossExhaustionSequence(IEnumerator enumerator, CardDrawPiles __instance)
     {
-        if (TurnManager.Instance.Opponent is ICustomExhaustSequence exhaustSeq && exhaustSeq != null)
+        if (TurnManager.Instance.Opponent is ICustomExhaustSequence exhaustSeq && exhaustSeq.RespondsToCustomExhaustSequence(__instance))
         {
             Singleton<ViewManager>.Instance.SwitchToView(View.CardPiles, immediate: false, lockAfter: true);
             yield return new WaitForSeconds(1f);
