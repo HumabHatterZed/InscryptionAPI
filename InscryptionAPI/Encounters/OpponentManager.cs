@@ -257,9 +257,12 @@ public static class OpponentManager
     {
         if (TurnManager.Instance.Opponent is ICustomExhaustSequence exhaustSeq && exhaustSeq.RespondsToCustomExhaustSequence(__instance))
         {
-            Singleton<ViewManager>.Instance.SwitchToView(View.CardPiles, immediate: false, lockAfter: true);
+            ViewManager.Instance.SwitchToView(View.CardPiles, immediate: false, lockAfter: true);
             yield return new WaitForSeconds(1f);
             yield return exhaustSeq.DoCustomExhaustSequence(__instance);
+            ViewManager.Instance.SwitchToView(View.Default);
+            ViewManager.Instance.Controller.LockState = ViewLockState.Unlocked;
+            __instance.turnsSinceExhausted++;
         }
         else
         {
