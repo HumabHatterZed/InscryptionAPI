@@ -1,5 +1,7 @@
 # 2.23.3
 - Fixed custom deck exhaust sequence not performing the requisite checks
+- Added 'CanAppearRandomly' bool and associated extension method for custom regions
+- All custom regions added through the API are now included in AllRegionsCopy and NewRegions (if addToPool was false then it won't be encounterable in-game like normal)
 
 # 2.23.2
 - Fixed error when trying to create cards that evolve/transform in 4 or more turns

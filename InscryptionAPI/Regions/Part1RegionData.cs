@@ -17,6 +17,7 @@ public class Part1RegionData
     public bool DoNotForceReachTerrain { get; set; }
     public bool AllowLockedTerrainCards { get; set; }
     public bool AllowSacrificableTerrainCards { get; set; }
+    public bool CanAppearRandomly { get; set; }
 
     private int tier;
     private RegionData region;
@@ -34,6 +35,7 @@ public class Part1RegionData
         AllowTerrainOnPlayerSide = true;
         RemoveDefaultReachTerrain = false;
         DoNotForceReachTerrain = false;
+        CanAppearRandomly = true;
         this.region = region;
         this.tier = tier;
     }
