@@ -21,6 +21,24 @@ If you have issues with ModmManagers head to one of these discords;
 6. Install [Inscryption API](https://inscryption.thunderstore.io/package/API_dev/API/) and extract the contents into a folder.
 7. Move the contents of the 'plugins' folder into 'BepInEx/plugins' and the contents of the 'monomod' folder into the 'BepInEx/monomod' folder.
 8. Run the game again. If everything runs correctly, a message will appear in the console telling you that the API was loaded.
+9. For any additional mods create a new subfolder, it can be called anything and extract the zips archive into it and if there is a BepInEx folder within the zip instead drop the contents of that folder into the BepInEx root for the modding instance. EX;
+```
+BepInEx // These go within the BepInEx root folder
+|-- config
+|-- patchers
+|-- plugins
+|-- monomod
+|-- core
+plugins // Files within go into the created plugin subfolder that was created for the mod
+|-- Art
+|-- Scripts
+|-- MyMod.dll
+manifest.json     --|
+README.md           |-- These can be ignored but if you want to keep them put them in the plugin subfolder
+CHANGELOG.md        |--
+icon.png          --|
+```
+10. Run the game once more and everything should be correct and working.
 
 ### Installing on the Steam Deck
 1. Download [r2modman](https://thunderstore.io/c/inscryption/p/ebkr/r2modman/) on the Steam Deck’s Desktop Mode and open it from its download using its `AppImage` file.
@@ -34,7 +52,7 @@ If you have issues with ModmManagers head to one of these discords;
 
 ### Mac & Linux
 1. Follow the steps here first: <https://docs.bepinex.dev/articles/user_guide/installation/index.html>
-2. Next do steps 4-8 of the Manual Installation
+2. Next do steps 4-10 of the Manual Installation
 3. Your game should be setup for inscryption modding now
 
 If you have any issues with Mac/Linux, Steam Deck, or Manual head over to the discord for this game:
