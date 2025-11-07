@@ -1,3 +1,4 @@
+using APIPlugin;
 using DiskCardGame;
 using InscryptionAPI.Card;
 using InscryptionAPI.Encounters;
@@ -8,6 +9,23 @@ namespace InscryptionAPI.Regions;
 
 public static class RegionExtensions
 {
+    /// <summary>
+    /// If the created region will be added to the pool of regions that can appear in a run.
+    /// </summary>
+    /// <param name="data">The RegionData for the region we are modifying.</param>
+    /// <param name="canAppear">If the created region will be added to the pool of regions that can appear in a run.</param>
+    /// <returns>The same RegionData so a chain can continue.</returns>
+    public static RegionData SetCanAppearRandomly(this RegionData data, bool canAppear) {
+        Part1RegionData region = RegionManager.NewRegions.FirstOrDefault(x => x.Region == data);
+        if (region != null) {
+            region.CanAppearRandomly = canAppear;
+        }
+        else {
+            InscryptionAPIPlugin.Logger.LogWarning($"Could not find custom region for RegionData [{data.name}]!");
+        }
+        return data;
+    }
+
     public static RegionData RegionByName(this IEnumerable<RegionData> regions, string name) => regions.FirstOrDefault(x => x.name == name);
 
     public static RegionData SetName(this RegionData region, string name)
@@ -196,6 +214,11 @@ public static class RegionExtensions
     public static RegionData SetFogAlpha(this RegionData region, float alpha)
     {
         region.fogAlpha = alpha;
+        return region;
+    }
+
+    public static RegionData SetMapEmission(this RegionData region, Texture texture) {
+        region.mapEmission = texture;
         return region;
     }
 
