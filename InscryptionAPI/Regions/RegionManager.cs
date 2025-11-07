@@ -36,6 +36,12 @@ public static class RegionManager
 
         return orderedRegions;
     }
+
+    private static List<Part1RegionData> GenerateBasePart1RegionData() {
+        List<RegionData> data = ReorderBaseRegions();
+        return data.Select(x => new Part1RegionData(x, 0)).ToList();
+    }
+
     public static readonly ObservableCollection<Part1RegionData> NewRegions = new();
 
     public static event Func<List<RegionData>, List<RegionData>> ModifyRegionsList;
@@ -109,8 +115,11 @@ public static class RegionManager
         RegionData retval = ScriptableObject.CreateInstance<RegionData>();
         retval.name = name;
 
-        if (addToPool)
-            Add(retval, tier);
+        Add(retval, tier);
+        if (!addToPool) {
+            retval.SetCanAppearRandomly(false);
+        }
+            
 
         return retval;
     }
@@ -355,11 +364,11 @@ public static class RegionManager
         return false;
     }
 
-    private static List<RegionData> GetAllRegionsForMapGeneration()
-    {
+    private static List<RegionData> GetAllRegionsForMapGeneration() {
         List<RegionData> allRegions = new(RegionProgression.Instance.regions);
         allRegions.RemoveAt(allRegions.Count - 1); // Remove midnight region
-        allRegions.AddRange(NewRegions.Select(a => a.Region)); // New Regions
+        allRegions.AddRange(NewRegions.Where(x => x.CanAppearRandomly).Select(a => a.Region)); // New Regions
+        allRegions.ForEach(x => InscryptionAPIPlugin.Logger.LogInfo(x.name));
         return allRegions;
     }
 
@@ -367,26 +376,11 @@ public static class RegionManager
     [HarmonyPatch(typeof(AscensionSaveData), "RollCurrentRunRegionOrder")]
     private static bool RollCurrentRunRegionOrder(AscensionSaveData __instance)
     {
-        // Get all regions to choose from
         List<RegionData> allRegions = GetAllRegionsForMapGeneration();
         allRegions = allRegions.Randomize().ToList();
 
         List<RegionData> selectedRegions = new();
         List<Opponent.Type> selectedOpponents = new();
-        for (int i = 0; i < allRegions.Count; i++)
-        {
-            RegionData regionData = allRegions[i];
-            Opponent.Type opponentType = GetRandomAvailableOpponent(regionData, selectedOpponents);
-            if (opponentType != Opponent.Type.Default)
-            {
-                // Add a region that doesn't conflict with the already selected ones
-                selectedRegions.Add(regionData);
-                selectedOpponents.Add(opponentType);
-            }
-
-            if (selectedRegions.Count == 3)
-                break;
-        }
 
         // Safety check: Make sure we have 3 regions!
         while (selectedRegions.Count < 3)

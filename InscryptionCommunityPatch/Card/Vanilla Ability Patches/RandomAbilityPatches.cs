@@ -35,7 +35,7 @@ public static class RandomAbilityPatches
         yield return enumerator;
 
         PlayableCard card = __instance.Queue.Find(x => x.QueuedSlot == slot);
-        if (!card)
+        if (card == null)
             yield break;
 
         if (card.HasAbility(Ability.RandomAbility) && !card.Status.hiddenAbilities.Contains(Ability.RandomAbility))
@@ -48,7 +48,7 @@ public static class RandomAbilityPatches
     {
         yield return enumerator;
 
-        if (!card || card.Dead)
+        if (card == null || card.Dead)
             yield break;
 
         if (card.HasAbility(Ability.RandomAbility) && !card.Status.hiddenAbilities.Contains(Ability.RandomAbility))
@@ -62,7 +62,7 @@ public static class RandomAbilityPatches
     private static IEnumerator ActivateOnEvolve(IEnumerator enumerator, PlayableCard __instance, CardInfo evolvedInfo)
     {
         yield return enumerator;
-        if (!__instance)
+        if (__instance == null || evolvedInfo == null)
             yield break;
 
         if (evolvedInfo.HasAbility(Ability.RandomAbility) && !__instance.Status.hiddenAbilities.Contains(Ability.RandomAbility))
@@ -70,9 +70,9 @@ public static class RandomAbilityPatches
     }
 
     [HarmonyPrefix, HarmonyPatch(typeof(PlayableCard), nameof(PlayableCard.AddTemporaryMod))]
-    private static void ActivateOnAddTempMod(PlayableCard __instance, ref CardModificationInfo mod)
+    private static void ActivateOnAddTempMod(PlayableCard __instance, CardModificationInfo mod)
     {
-        if (mod.HasAbility(Ability.RandomAbility))
+        if (mod != null && mod.HasAbility(Ability.RandomAbility))
         {
             for (int i = 0; i < mod.abilities.Count; i++)
             {
