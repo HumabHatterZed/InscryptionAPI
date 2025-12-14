@@ -1,6 +1,6 @@
 # 2.23.4
 - Fixed GemsDraw only considering the player's slots when determining how many cards to draw
-- 
+- Fixed Gemify affecting Blood cost when it shouldn't
 
 # 2.23.3
 - Fixed custom deck exhaust sequence not performing the requisite checks
