@@ -1,5 +1,7 @@
 # 2.23.4
 - Fixed GemsDraw only considering the player's slots when determining how many cards to draw
+- Fixed Act 2 Tutor sequence softlocking when there are no cards to display
+- Fixed Act 2 Tutor sequence not displaying cards when you have less than 7 cards remaining in your deck
 - Fixed Gemify affecting Blood cost when it shouldn't
 - Added Gems Cost support for ExtendedActivatedAbilityBehaviour class
 - Added extension AbilityManager.FullAbility.FlipYIfOpponent
