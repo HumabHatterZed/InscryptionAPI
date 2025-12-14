@@ -2,6 +2,7 @@
 - Fixed GemsDraw only considering the player's slots when determining how many cards to draw
 - Fixed Gemify affecting Blood cost when it shouldn't
 - Added Gems Cost support for ExtendedActivatedAbilityBehaviour class
+- Added extension AbilityManager.FullAbility.FlipYIfOpponent
 
 # 2.23.3
 - Fixed custom deck exhaust sequence not performing the requisite checks
