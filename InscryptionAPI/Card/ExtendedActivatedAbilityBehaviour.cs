@@ -1,6 +1,7 @@
 using DiskCardGame;
 using GBC;
 using HarmonyLib;
+using InscryptionAPI.Helpers;
 using InscryptionAPI.Helpers.Extensions;
 using System.Collections;
 using UnityEngine;
@@ -11,7 +12,7 @@ public abstract class ExtendedActivatedAbilityBehaviour : AbilityBehaviour
     public int bloodCostMod;
     public int bonesCostMod;
     public int energyCostMod;
-    public List<GemType> gemsCostMod;
+    public List<GemType> gemsCostMod = new();
     public int healthCostMod;
 
     public virtual int StartingBloodCost { get; }
@@ -29,7 +30,16 @@ public abstract class ExtendedActivatedAbilityBehaviour : AbilityBehaviour
     public int BloodCost => Mathf.Max(0, StartingBloodCost + bloodCostMod);
     public int BonesCost => Mathf.Max(0, StartingBonesCost + bonesCostMod);
     public int EnergyCost => Mathf.Max(0, StartingEnergyCost + energyCostMod);
-    public List<GemType> GemsCost => StartingGemsCost.Concat(gemsCostMod).ToList();
+    public List<GemType> GemsCost {
+        get {
+            List<GemType> retval = new();
+            if (StartingGemsCost != null && StartingGemsCost.Count > 0) {
+                retval.AddRange(StartingGemsCost);
+            }
+            retval.AddRange(gemsCostMod);
+            return retval;
+        }
+    }
     public int HealthCost => Mathf.Max(0, StartingHealthCost + healthCostMod);
 
     public Dictionary<CardInfo, CardSlot> currentSacrificedCardInfos = new();
@@ -247,9 +257,9 @@ public abstract class ExtendedActivatedAbilityBehaviour : AbilityBehaviour
         if (BloodCost < 1 || SacrificeValue() >= BloodCost) {
             // if we have enough health, Energy, and Bones
             if (base.Card.Health >= HealthCost && ResourcesManager.Instance.PlayerEnergy >= EnergyCost && ResourcesManager.Instance.PlayerBones >= BonesCost) {
-                bool enoughOrange = OpponentGemsManager.Instance.opponentGems.Count(x => x == GemType.Orange) >= GemsCost.Count(x => x == GemType.Orange);
-                bool enoughGreen = OpponentGemsManager.Instance.opponentGems.Count(x => x == GemType.Green) >= GemsCost.Count(x => x == GemType.Green);
-                bool enoughBlue = OpponentGemsManager.Instance.opponentGems.Count(x => x == GemType.Blue) >= GemsCost.Count(x => x == GemType.Blue);
+                bool enoughOrange = ResourcesManagerHelpers.GemCount(!base.Card.OpponentCard, GemType.Orange) >= GemsCost.Count(x => x == GemType.Orange);
+                bool enoughGreen = ResourcesManagerHelpers.GemCount(!base.Card.OpponentCard, GemType.Green) >= GemsCost.Count(x => x == GemType.Green);
+                bool enoughBlue = ResourcesManagerHelpers.GemCount(!base.Card.OpponentCard, GemType.Blue) >= GemsCost.Count(x => x == GemType.Blue);
 
                 // if we have enough gems
                 return enoughOrange && enoughGreen && enoughBlue;
