@@ -1,3 +1,7 @@
+# 2.23.4
+- Fixed GemsDraw only considering the player's slots when determining how many cards to draw
+- 
+
 # 2.23.3
 - Fixed custom deck exhaust sequence not performing the requisite checks
 - Added 'CanAppearRandomly' bool and associated extension method for custom regions
