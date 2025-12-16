@@ -60,7 +60,6 @@ public class Part1GemifyIndicator {
     }
 
     public static void AddAct1GemifyVisuals(CardRenderCamera cardRenderCamera) {
-        Debug.Log("GemifyTest");
         CardDisplayer3D dis = cardRenderCamera.cardDisplayer as CardDisplayer3D;
 
         GameObject obj = new("GemifyTest");
