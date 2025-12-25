@@ -5,6 +5,7 @@
 - Fixed Gemify affecting Blood cost when it shouldn't
 - Added Gems Cost support for ExtendedActivatedAbilityBehaviour class
 - Added extension AbilityManager.FullAbility.FlipYIfOpponent
+- Add config option to prevent Act 1 card emissions from rendering above the play costs
 
 # 2.23.3
 - Fixed custom deck exhaust sequence not performing the requisite checks
