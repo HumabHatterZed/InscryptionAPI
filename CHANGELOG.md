@@ -3,6 +3,7 @@
 - Fixed Act 2 Tutor sequence softlocking when there are no cards to display
 - Fixed Act 2 Tutor sequence not displaying cards when you have less than 7 cards remaining in your deck
 - Fixed Gemify affecting Blood cost when it shouldn't
+- Fixed emission textures appearing stretched on Giant cards
 - Added Gems Cost support for ExtendedActivatedAbilityBehaviour class
 - Added extension AbilityManager.FullAbility.FlipYIfOpponent
 - Add config option to prevent Act 1 card emissions from rendering above the play costs
