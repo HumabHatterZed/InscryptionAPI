@@ -23,7 +23,7 @@ internal class GemsDrawFix
         Singleton<ViewManager>.Instance.SwitchToView(SaveManager.SaveFile.IsMagnificus ? View.WizardBattleSlots : View.Default);
         yield return new WaitForSeconds(0.1f);
 
-        int numGems = Singleton<BoardManager>.Instance.PlayerSlotsCopy.Count(x => x.Card != null && x.Card.HasTrait(Trait.Gem));
+        int numGems = Singleton<BoardManager>.Instance.GetSlots(!__instance.Card.OpponentCard).Count(x => x.Card != null && x.Card.HasTrait(Trait.Gem));
 
         if (numGems == 0)
         {

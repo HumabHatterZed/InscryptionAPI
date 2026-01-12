@@ -1,5 +1,6 @@
 using DiskCardGame;
 using GBC;
+using InscryptionAPI.Helpers;
 using InscryptionAPI.Helpers.Extensions;
 using System.Collections;
 using UnityEngine;
@@ -87,20 +88,34 @@ public abstract class ActivatedDamageShieldBehaviour : DamageShieldBehaviour
     public int bloodCostMod;
     public int bonesCostMod;
     public int energyCostMod;
+    public List<GemType> gemsCostMod;
     public int healthCostMod;
 
     public virtual int StartingBloodCost { get; }
     public virtual int StartingBonesCost { get; }
     public virtual int StartingEnergyCost { get; }
+    public virtual List<GemType> StartingGemsCost { get; }
     public virtual int StartingHealthCost { get; }
     public virtual int OnActivateBloodCostMod { get; set; }
     public virtual int OnActivateBonesCostMod { get; set; }
     public virtual int OnActivateEnergyCostMod { get; set; }
+    public virtual List<GemType> OnActivateGemsCostMod { get; set; }
+    public virtual bool OnActivateGemsCostModRemovesGems { get; set; }
     public virtual int OnActivateHealthCostMod { get; set; }
 
     public int BloodCost => Mathf.Max(0, StartingBloodCost + bloodCostMod);
     public int BonesCost => Mathf.Max(0, StartingBonesCost + bonesCostMod);
     public int EnergyCost => Mathf.Max(0, StartingEnergyCost + energyCostMod);
+    public List<GemType> GemsCost {
+        get {
+            List<GemType> retval = new();
+            if (StartingGemsCost != null && StartingGemsCost.Count > 0) {
+                retval.AddRange(StartingGemsCost);
+            }
+            retval.AddRange(gemsCostMod);
+            return retval;
+        }
+    }
     public int HealthCost => Mathf.Max(0, StartingHealthCost + healthCostMod);
 
     public Dictionary<CardInfo, CardSlot> currentSacrificedCardInfos = new();
@@ -187,12 +202,29 @@ public abstract class ActivatedDamageShieldBehaviour : DamageShieldBehaviour
                     yield break;
                 }
             }
-            if (OnActivateEnergyCostMod != 0)
-                energyCostMod += OnActivateEnergyCostMod;
-            if (OnActivateBonesCostMod != 0)
-                bonesCostMod += OnActivateBonesCostMod;
-            if (OnActivateHealthCostMod != 0)
-                healthCostMod += OnActivateHealthCostMod;
+
+            int energyMod = OnActivateEnergyCostMod;
+            int bonesMod = OnActivateBonesCostMod;
+            List<GemType> gemsMod = OnActivateGemsCostMod;
+            int healthMod = OnActivateHealthCostMod;
+
+            if (energyMod != 0)
+                energyCostMod += energyMod;
+
+            if (bonesMod != 0)
+                bonesCostMod += bonesMod;
+
+            if (gemsMod != null && gemsMod.Count > 0) {
+                if (OnActivateGemsCostModRemovesGems) {
+                    gemsMod.ForEach(x => gemsCostMod.Remove(x));
+                }
+                else {
+                    gemsCostMod.AddRange(gemsMod);
+                }
+            }
+
+            if (healthMod != 0)
+                healthCostMod += healthMod;
 
             yield return PostActivate();
             currentSacrificedCardInfos.Clear();
@@ -296,18 +328,22 @@ public abstract class ActivatedDamageShieldBehaviour : DamageShieldBehaviour
         manager.currentSacrifices.Clear();
     }
 
-    private bool CanAfford()
-    {
-        if (BloodCost <= 0 || SacrificeValue() >= BloodCost)
-        {
-            if (base.Card.Health >= HealthCost)
-            {
-                if (Singleton<ResourcesManager>.Instance.PlayerEnergy >= EnergyCost)
-                    return Singleton<ResourcesManager>.Instance.PlayerBones >= BonesCost;
+    private bool CanAfford() {
+        // if no blood cost or we can fulfill our blood cost
+        if (BloodCost < 1 || SacrificeValue() >= BloodCost) {
+            // if we have enough health, Energy, and Bones
+            if (base.Card.Health >= HealthCost && ResourcesManager.Instance.PlayerEnergy >= EnergyCost && ResourcesManager.Instance.PlayerBones >= BonesCost) {
+                bool enoughOrange = ResourcesManagerHelpers.GemCount(!base.Card.OpponentCard, GemType.Orange) >= GemsCost.Count(x => x == GemType.Orange);
+                bool enoughGreen = ResourcesManagerHelpers.GemCount(!base.Card.OpponentCard, GemType.Green) >= GemsCost.Count(x => x == GemType.Green);
+                bool enoughBlue = ResourcesManagerHelpers.GemCount(!base.Card.OpponentCard, GemType.Blue) >= GemsCost.Count(x => x == GemType.Blue);
+
+                // if we have enough gems
+                return enoughOrange && enoughGreen && enoughBlue;
             }
         }
         return false;
     }
+
     private bool LearnMechanic() => SaveManager.SaveFile.IsPart2 && !ProgressionData.LearnedMechanic(MechanicsConcept.GBCActivatedAbilities);
     private int SacrificeValue()
     {

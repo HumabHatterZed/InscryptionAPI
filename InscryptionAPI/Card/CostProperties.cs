@@ -128,7 +128,7 @@ public static class CostProperties
 
     public static bool ReduceGemifiedBlood(PlayableCard card, int? bloodCost = null)
     {
-        return (bloodCost ?? OriginalBloodCost(card.Info)) > 0 && !ReduceGemifiedMox(card) && !ReduceGemifiedBones(card) && !ReduceGemifiedMox(card);
+        return (bloodCost ?? OriginalBloodCost(card.Info)) > 0 && !ReduceGemifiedEnergy(card) && !ReduceGemifiedBones(card) && !ReduceGemifiedMox(card);
     }
     public static bool ReduceGemifiedMox(PlayableCard card, List<GemType> gemsCost = null)
     {

@@ -235,6 +235,11 @@ public class PixelPlayableCardArray : ManagedBehaviour
 
     protected IEnumerator SpawnAndPlaceCards(List<CardInfo> cards, int numRows, int pageIndex, bool isDeckReview = false, bool forPositiveEffect = true)
     {
+        if (numRows < 1) {
+            PatchPlugin.Logger.LogDebug($"NumRows for PixelPlayableCardArray is 0, displaying no cards");
+            yield break;
+        }
+
         SetOverlayEnabled(true);
         SetBoardEnabled(false);
         displayedCards.ForEach(delegate (PixelPlayableCard x)
@@ -244,11 +249,6 @@ public class PixelPlayableCardArray : ManagedBehaviour
         });
         displayedCards.Clear();
 
-        if (numRows < 1)
-        {
-            PatchPlugin.Logger.LogDebug($"NumRows for PixelPlayableCardArray is 0, displaying no cards");
-            yield break;
-        }
         // can only show 42 cards per page
         int maxPerPage = maxRows * maxCardsPerRow;
         int startingIndex = maxPerPage * pageIndex;
@@ -296,17 +296,16 @@ public class PixelPlayableCardArray : ManagedBehaviour
     private PixelPlayableCard CreateAndPlaceCard(CardInfo info, Vector3 cardPos)
     {
         PixelPlayableCard component = Instantiate(gameObjectReference, base.transform);
+        component.transform.position = Vector3.zeroVector;
+        component.SetInfo(info);
+        component.SetFaceDown(false, true);
+        component.SetEnabled(enabled: false);
 
         PixelCardAnimationController controller = component.Anim as PixelCardAnimationController;
         controller.cardRenderer.sortingGroupID = gameObjectReference.Anim.cardRenderer.sortingGroupID;
         controller.cardbackRenderer.sortingGroupID = gameObjectReference.Anim.cardRenderer.sortingGroupID;
         controller.cardRenderer.sortingOrder = -9000;
         controller.cardbackRenderer.sortingOrder = -8000;
-
-        component.SetFaceDown(false, true);
-        component.SetInfo(info);
-        component.SetEnabled(enabled: false);
-        component.transform.position = Vector3.zeroVector;
 
         gamepadGrid.Rows[0].interactables.Add(component);
         displayedCards.Add(component);
@@ -338,7 +337,15 @@ public class PixelPlayableCardArray : ManagedBehaviour
         }
     }
 
-    private int GetNumRows(int numCards) => Mathf.Min(maxRows, numCards / maxCardsPerRow);
+    private int GetNumRows(int numCards) {
+        if (numCards == 0)
+            return 0;
+
+        if (numCards < maxCardsPerRow)
+            return 1;
+
+        return Mathf.Min(maxRows, numCards / maxCardsPerRow);
+    }
     private void SetCardsEnabled(bool enabled) => displayedCards.ForEach(x => x.SetEnabled(enabled));
     private void SetBoardEnabled(bool enabled)
     {
