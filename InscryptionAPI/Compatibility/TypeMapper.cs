@@ -17,7 +17,8 @@ public static class TypeMapper<S, D> where S : class where D : class {
             if (_accessors is null) {
                 _accessors = new();
 
-                foreach (var _field in AccessTools.GetDeclaredFields(typeof(S)).Where(x => !x.GetCustomAttributes(typeof(IgnoreMappingAttribute), false).Any())) {
+                foreach (var _field in AccessTools.GetDeclaredFields(typeof(S)).Where(x => !x.GetCustomAttributes(typeof(IgnoreMappingAttribute), false).Any()))
+                {
                     var accessor = new DynamicMethodDefinition("get_" + _field.Name, typeof(object), new Type[] { typeof(S) });
                     var il = accessor.GetILProcessor();
                     il.Emit(OpCodes.Ldarg_0);
@@ -38,7 +39,8 @@ public static class TypeMapper<S, D> where S : class where D : class {
             if (_setters == null) {
                 _setters = new();
 
-                foreach (var _field in AccessTools.GetDeclaredFields(typeof(D))) {
+                foreach (var _field in AccessTools.GetDeclaredFields(typeof(D)))
+                {
                     var setter = new DynamicMethodDefinition("set_" + _field.Name, typeof(void), new Type[] { typeof(D), typeof(object) });
                     var il = setter.GetILProcessor();
                     il.Emit(OpCodes.Ldarg_0);
@@ -53,10 +55,13 @@ public static class TypeMapper<S, D> where S : class where D : class {
         }
     }
 
-    public static D Convert(S source, D destination) {
-        foreach (var _field in FieldAccessors) {
+    public static D Convert(S source, D destination)
+    {
+        foreach (var _field in FieldAccessors)
+        {
             object val = _field.Value.Invoke(null, new object[] { source });
-            if (val is not null && FieldSetters.ContainsKey(_field.Key)) {
+            if (val is not null && FieldSetters.ContainsKey(_field.Key))
+            {
                 FieldSetters[_field.Key].Invoke(null, new object[] { destination, val });
             }
         }

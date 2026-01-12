@@ -68,6 +68,13 @@ public static class ResourcesManagerHelpers
     {
         return instance.gems.Count(x => x == gem);
     }
+
+    /// <summary>
+    /// Counts how many gems of the given type are owned by the specified player.
+    /// </summary>
+    /// <param name="playerGems">True to check the player's gems or false to check the opponent's gems.</param>
+    /// <param name="gemToCheck">GemType to get the count of.</param>
+    /// <returns>The number of gems of the given type that are owned by the player/opponent.</returns>
     public static int GemCount(bool playerGems, GemType gemToCheck)
     {
         if (playerGems)

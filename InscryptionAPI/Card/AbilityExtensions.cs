@@ -424,6 +424,16 @@ public static class AbilityExtensions
         return abilityInfo;
     }
     /// <summary>
+    /// Sets whether or not the ability's icon should be flipped upside-down when it's on an opponent card.
+    /// </summary>
+    /// <param name="abilityInfo">The instance of AbilityInfo.</param>
+    /// <param name="flipY">If the icon should be flipped.</param>
+    /// <returns>The same AbilityInfo so a chain can continue.</returns>
+    public static FullAbility SetFlipYIfOpponent(this FullAbility fullAbility, bool flipY = true) {
+        fullAbility.Info.SetFlipYIfOpponent(flipY);
+        return fullAbility;
+    }
+    /// <summary>
     /// Sets whether or not the ability's icon's colour should be overridden, and what the override colour should be.
     /// The colour override only applies to the default ability icons; totem and merge icons are unaffected.
     /// </summary>
