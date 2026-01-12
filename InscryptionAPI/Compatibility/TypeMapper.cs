@@ -10,15 +10,11 @@ namespace APIPlugin;
 public class IgnoreMappingAttribute : Attribute { }
 
 [Obsolete("Unnecessary", true)]
-public static class TypeMapper<S, D> where S : class where D : class
-{
+public static class TypeMapper<S, D> where S : class where D : class {
     private static Dictionary<string, MethodInfo> _accessors = null;
-    private static Dictionary<string, MethodInfo> FieldAccessors
-    {
-        get
-        {
-            if (_accessors is null)
-            {
+    private static Dictionary<string, MethodInfo> FieldAccessors {
+        get {
+            if (_accessors is null) {
                 _accessors = new();
 
                 foreach (var _field in AccessTools.GetDeclaredFields(typeof(S)).Where(x => !x.GetCustomAttributes(typeof(IgnoreMappingAttribute), false).Any()))
@@ -38,12 +34,9 @@ public static class TypeMapper<S, D> where S : class where D : class
     }
 
     private static Dictionary<string, MethodInfo> _setters = null;
-    private static Dictionary<string, MethodInfo> FieldSetters
-    {
-        get
-        {
-            if (_setters == null)
-            {
+    private static Dictionary<string, MethodInfo> FieldSetters {
+        get {
+            if (_setters == null) {
                 _setters = new();
 
                 foreach (var _field in AccessTools.GetDeclaredFields(typeof(D)))
