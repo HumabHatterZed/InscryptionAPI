@@ -72,6 +72,15 @@ public static class AbilityExtensions
     }
 
     /// <summary>
+    /// Sets the icon texture for the ability.
+    /// </summary>
+    /// <param name="info">The ability info to set the texture for.</param>
+    /// <param name="icon">A 49x49 texture containing the icon.</param>
+    public static void SetIcon(this FullAbility info, Texture2D icon) {
+        info.Texture = icon;
+    }
+
+    /// <summary>
     /// Sets the flipped texture for the ability (used when the ability belongs to the opponent).
     /// </summary>
     /// <param name="info">The ability info to set the texture for.</param>
@@ -92,16 +101,6 @@ public static class AbilityExtensions
     }
 
     /// <summary>
-    /// Sets the icon texture for the ability.
-    /// </summary>
-    /// <param name="info">The ability info to set the texture for.</param>
-    /// <param name="icon">A 49x49 texture containing the icon.</param>
-    public static void SetIcon(this FullAbility info, Texture2D icon)
-    {
-        info.Texture = icon;
-    }
-
-    /// <summary>
     /// Sets the flipped texture for the ability (used when the ability belongs to the opponent).
     /// </summary>
     /// <param name="info">The ability info to set the texture for.</param>
@@ -110,82 +109,6 @@ public static class AbilityExtensions
     {
         info.CustomFlippedTexture = icon;
         info.Info.customFlippedIcon = true;
-    }
-
-    /// <summary>
-    /// Sets the icon that will be displayed for this stat icon when the card is in the player's hand.
-    /// </summary>
-    /// <param name="info">The instance of StatIconInfo.</param>
-    /// <param name="icon">A 49x49 texture containing the icon.</param>
-    /// <param name="filterMode">The filter mode for the icon texture. Leave this at its default value unless you have a specific reason to change it.</param>
-    /// <returns>The same StatIconInfo so a chain can continue.</returns>
-    public static StatIconInfo SetIcon(this StatIconInfo info, Texture2D icon, FilterMode? filterMode = null)
-    {
-        info.iconGraphic = icon;
-        if (filterMode.HasValue)
-            info.iconGraphic.filterMode = filterMode.Value;
-        return info;
-    }
-
-    /// <summary>
-    /// Sets the icon that will be displayed for this stat icon when the card is in the player's hand.
-    /// </summary>
-    /// <param name="info">The instance of StatIconInfo.</param>
-    /// <param name="pathToArt">The path to a 49x49 texture containing the icon on disk.</param>
-    /// <param name="filterMode">The filter mode for the icon texture. Leave this at its default value unless you have a specific reason to change it.</param>
-    /// <returns>The same StatIconInfo so a chain can continue.</returns>
-    public static StatIconInfo SetIcon(this StatIconInfo info, string pathToArt, FilterMode? filterMode = null)
-    {
-        info.iconGraphic = TextureHelper.GetImageAsTexture(pathToArt);
-        if (filterMode.HasValue)
-            info.iconGraphic.filterMode = filterMode.Value;
-        return info;
-    }
-
-    /// <summary>
-    /// Set the StatIconInfo's rulebookName and rulebookDescription. Does not make the stat icon appear in the Rulebook.
-    /// </summary>
-    /// <param name="info"></param>
-    /// <param name="rulebookName"></param>
-    /// <param name="rulebookDescription"></param>
-    /// <returns>The same StatIconInfo so a chain can continue.</returns>
-    public static StatIconInfo SetRulebookInfo(this StatIconInfo info, string rulebookName, string rulebookDescription = null)
-    {
-        info.rulebookName = rulebookName;
-        info.rulebookDescription = rulebookDescription;
-        return info;
-    }
-    /// <summary>
-    /// Sets the StatIconInfo's appliesToAttack and appliesToHealth fields. Note these fields don't make the stat icon affect the stat; you still need to implement that logic.
-    /// </summary>
-    /// <param name="info"></param>
-    /// <param name="appliesToAttack">If the stat icon should cover a card's Power.</param>
-    /// <param name="appliesToHealth">If the stat icon should cover a card's Health.</param>
-    /// <returns>The same StatIconInfo so a chain can continue.</returns>
-    public static StatIconInfo SetAppliesToStats(this StatIconInfo info, bool appliesToAttack, bool appliesToHealth)
-    {
-        info.appliesToAttack = appliesToAttack;
-        info.appliesToHealth = appliesToHealth;
-        return info;
-    }
-
-    /// <summary>
-    /// Sets the icon that will be displayed for this stat icon when the card is in the player's hand in Act 2.
-    /// </summary>
-    /// <param name="info">The instance of StatIconInfo.</param>
-    /// <param name="icon">A 16x8 texture containing the icon .</param>
-    /// <param name="filterMode">The filter mode for the icon texture. Leave this at its default value unless you have a specific reason to change it.</param>
-    /// <returns>The same StatIconInfo so a chain can continue.</returns>
-    public static StatIconInfo SetPixelIcon(this StatIconInfo info, Texture2D icon, FilterMode? filterMode = null)
-    {
-        info.pixelIconGraphic = TextureHelper.ConvertTexture(icon, TextureHelper.SpriteType.PixelStatIcon, filterMode ?? FilterMode.Point);
-        return info;
-    }
-    public static StatIconInfo SetPixelIcon(this StatIconInfo info, string pathToArt, FilterMode? filterMode = null)
-    {
-        Texture2D tex = TextureHelper.GetImageAsTexture(pathToArt, filterMode ?? FilterMode.Point);
-        info.pixelIconGraphic = TextureHelper.ConvertTexture(tex, TextureHelper.SpriteType.PixelStatIcon);
-        return info;
     }
 
     /// <summary>
@@ -219,21 +142,6 @@ public static class AbilityExtensions
     }
 
     /// <summary>
-    /// Adds one or more metacategories to the stati icon. Duplicate categories will not be added.
-    /// </summary>
-    /// <param name="info">The instance of StatIconInfo.</param>
-    /// <param name="categories">The metacategories to add.</param>
-    /// <returns>The same StatIconInfo so a chain can continue.</returns>
-    public static StatIconInfo AddMetaCategories(this StatIconInfo info, params AbilityMetaCategory[] categories)
-    {
-        info.metaCategories ??= new();
-        foreach (var app in categories)
-            if (!info.metaCategories.Contains(app))
-                info.metaCategories.Add(app);
-        return info;
-    }
-
-    /// <summary>
     /// Helper method: automatically adds the Part1Modular and Part1Rulebook metacategories to the ability.
     /// </summary>
     /// <param name="info">The instance of AbilityInfo.</param>
@@ -241,16 +149,6 @@ public static class AbilityExtensions
     public static AbilityInfo SetDefaultPart1Ability(this AbilityInfo info)
     {
         return info.AddMetaCategories(AbilityMetaCategory.Part1Modular, AbilityMetaCategory.Part1Rulebook);
-    }
-
-    /// <summary>
-    /// Helper method: automatically adds the Part1Rulebook metacategories to the stat icon.
-    /// </summary>
-    /// <param name="info">The instance of StatIconInfo.</param>
-    /// <returns>The same stati icon so a chain can continue.</returns>
-    public static StatIconInfo SetDefaultPart1Ability(this StatIconInfo info)
-    {
-        return info.AddMetaCategories(AbilityMetaCategory.Part1Rulebook);
     }
 
     /// <summary>
@@ -270,15 +168,6 @@ public static class AbilityExtensions
         return info.AddMetaCategories(AbilityMetaCategory.Part3Modular, AbilityMetaCategory.Part3Rulebook, AbilityMetaCategory.Part3BuildACard);
     }
 
-    /// <summary>
-    /// Helper method: automatically adds the Part3Rulebook metacategories to the stat icon.
-    /// </summary>
-    /// <param name="info">The instance of StatIconInfo.</param>
-    /// <returns>The same StatIconInfo so a chain can continue.</returns>
-    public static StatIconInfo SetDefaultPart3Ability(this StatIconInfo info)
-    {
-        return info.AddMetaCategories(AbilityMetaCategory.Part3Rulebook);
-    }
     /// <summary>
     /// Sets the text displayed when this ability is marked as learned.
     /// </summary>
@@ -311,6 +200,7 @@ public static class AbilityExtensions
 
         return abilityInfo;
     }
+
     /// <summary>
     /// Sets the text displayed whenever OnAbilityTriggered is called by this ability in Act 2.
     /// </summary>
@@ -323,6 +213,17 @@ public static class AbilityExtensions
         return abilityInfo;
     }
     /// <summary>
+    /// Sets the text displayed whenever OnAbilityTriggered is called by this ability in Act 2.
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="triggerText">The text to display when OnAbilityTriggered is called.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetGBCTriggerText(this FullAbility fullAbility, string triggerText) {
+        fullAbility.Info.triggerText = triggerText;
+        return fullAbility;
+    }
+
+    /// <summary>
     /// Sets the power level of the ability, used in some game logic like determining the opponent totem's ability.
     /// Vanilla power levels range from -3 to 5, and values above or below are ignored in most cases.
     /// </summary>
@@ -334,16 +235,38 @@ public static class AbilityExtensions
         abilityInfo.powerLevel = powerLevel;
         return abilityInfo;
     }
+    /// <summary>
+    /// Sets the power level of the ability, used in some game logic like determining the opponent totem's ability.
+    /// Vanilla power levels range from -3 to 5, and values above or below are ignored in most cases.
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="powerLevel">The ability's power level. Should be equal to or between -3 and 5.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetPowerlevel(this FullAbility fullAbility, int powerLevel) {
+        fullAbility.Info.powerLevel = powerLevel;
+        return fullAbility;
+    }
+
     public static AbilityInfo SetRulebookDescription(this AbilityInfo abilityInfo, string description)
     {
         abilityInfo.rulebookDescription = description;
         return abilityInfo;
     }
+    public static FullAbility SetRulebookDescription(this FullAbility fullAbility, string description) {
+        fullAbility.Info.rulebookDescription = description;
+        return fullAbility;
+    }
+
     public static AbilityInfo SetRulebookName(this AbilityInfo abilityInfo, string name)
     {
         abilityInfo.rulebookName = name;
         return abilityInfo;
     }
+    public static FullAbility SetRulebookName(this FullAbility fullAbility, string name) {
+        fullAbility.Info.rulebookName = name;
+        return fullAbility;
+    }
+
     /// <summary>
     /// Sets whether or not the ability is an activated ability.
     /// </summary>
@@ -356,6 +279,17 @@ public static class AbilityExtensions
         return abilityInfo;
     }
     /// <summary>
+    /// Sets whether or not the ability is an activated ability.
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="activated">If the ability is activated.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetActivated(this FullAbility fullAbility, bool activated = true) {
+        fullAbility.Info.activated = activated;
+        return fullAbility;
+    }
+
+    /// <summary>
     /// Sets whether or not the ability is passive (will not trigger).
     /// </summary>
     /// <param name="abilityInfo">The instance of AbilityInfo.</param>
@@ -366,6 +300,17 @@ public static class AbilityExtensions
         abilityInfo.passive = passive;
         return abilityInfo;
     }
+    /// <summary>
+    /// Sets whether or not the ability is passive (will not trigger).
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="passive">If the ability is passive.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetPassive(this FullAbility fullAbility, bool passive = true) {
+        fullAbility.Info.passive = passive;
+        return fullAbility;
+    }
+
     /// <summary>
     /// Sets whether or not the ability can be used by the opponent.
     /// </summary>
@@ -378,6 +323,17 @@ public static class AbilityExtensions
         return abilityInfo;
     }
     /// <summary>
+    /// Sets whether or not the ability can be used by the opponent.
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="opponentUsable">If the ability is usable by the opponent.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetOpponentUsable(this FullAbility fullAbility, bool opponentUsable = true) {
+        fullAbility.Info.opponentUsable = opponentUsable;
+        return fullAbility;
+    }
+
+    /// <summary>
     /// Sets whether or not the ability is a conduit.
     /// </summary>
     /// <param name="abilityInfo">The instance of AbilityInfo.</param>
@@ -389,6 +345,17 @@ public static class AbilityExtensions
         return abilityInfo;
     }
     /// <summary>
+    /// Sets whether or not the ability is a conduit.
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="conduit">If the ability is a conduit.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetConduit(this FullAbility fullAbility, bool conduit = true) {
+        fullAbility.Info.conduit = conduit;
+        return fullAbility;
+    }
+
+    /// <summary>
     /// Sets whether or not the ability is a conduit cell.
     /// </summary>
     /// <param name="abilityInfo">The instance of AbilityInfo.</param>
@@ -399,6 +366,17 @@ public static class AbilityExtensions
         abilityInfo.conduitCell = conduitCell;
         return abilityInfo;
     }
+    /// <summary>
+    /// Sets whether or not the ability is a conduit cell.
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="conduitCell">If the ability is a conduit cell.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetConduitCell(this FullAbility fullAbility, bool conduitCell = true) {
+        fullAbility.Info.conduitCell = conduitCell;
+        return fullAbility;
+    }
+
     /// <summary>
     /// Sets whether or not the ability can stack on a card, triggering once for each stack.
     /// Optional parameter for setting the ability to only trigger once per stack when a card evolves (only affects abilities that can stack).
@@ -412,6 +390,18 @@ public static class AbilityExtensions
         abilityInfo.SetTriggersOncePerStack(triggersOncePerStack);
         return abilityInfo;
     }
+    /// <summary>
+    /// Sets whether or not the ability can stack on a card, triggering once for each stack.
+    /// Optional parameter for setting the ability to only trigger once per stack when a card evolves (only affects abilities that can stack).
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="triggersOncePerStack">Whether or not to prevent double triggering.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetCanStack(this FullAbility fullAbility, bool canStack = true, bool triggersOncePerStack = false) {
+        fullAbility.Info.SetCanStack(canStack, triggersOncePerStack);
+        return fullAbility;
+    }
+
     /// <summary>
     /// Sets whether or not the ability's icon should be flipped upside-down when it's on an opponent card.
     /// </summary>
@@ -433,6 +423,7 @@ public static class AbilityExtensions
         fullAbility.Info.SetFlipYIfOpponent(flipY);
         return fullAbility;
     }
+
     /// <summary>
     /// Sets whether or not the ability's icon's colour should be overridden, and what the override colour should be.
     /// The colour override only applies to the default ability icons; totem and merge icons are unaffected.
@@ -449,6 +440,20 @@ public static class AbilityExtensions
 
         return abilityInfo;
     }
+
+    /// <summary>
+    /// Sets whether or not the ability's icon's colour should be overridden, and what the override colour should be.
+    /// The colour override only applies to the default ability icons; totem and merge icons are unaffected.
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="hasOverride">If the ability icon's colour should be overridden.</param>
+    /// <param name="colorOverride">The colour that will override the icon. Only applies if hasOverride is true.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetHasColorOverride(this FullAbility fullAbility, bool hasOverride, Color colorOverride = default) {
+        fullAbility.Info.SetHasColorOverride(hasOverride, colorOverride);
+        return fullAbility;
+    }
+
     /// <summary>
     /// Sets whether or not the ability's name should precede its description in Act 2.
     /// If false, only the ability's description will be shown.
@@ -460,6 +465,18 @@ public static class AbilityExtensions
     {
         abilityInfo.keywordAbility = keyword;
         return abilityInfo;
+    }
+
+    /// <summary>
+    /// Sets whether or not the ability's name should precede its description in Act 2.
+    /// If false, only the ability's description will be shown.
+    /// </summary>
+    /// <param name="fullAbility">The instance of FullAbility.</param>
+    /// <param name="keyword">If the ability's name should precede its Act 2 description.</param>
+    /// <returns>The same FullAbility so a chain can continue.</returns>
+    public static FullAbility SetKeywordAbility(this FullAbility fullAbility, bool keyword = true) {
+        fullAbility.Info.keywordAbility = keyword;
+        return fullAbility;
     }
 
     /// <summary>
@@ -487,6 +504,110 @@ public static class AbilityExtensions
     {
         return info.metaCategories.Contains(category);
     }
+
+    #region Stat Icons
+    /// <summary>
+    /// Sets the icon that will be displayed for this stat icon when the card is in the player's hand.
+    /// </summary>
+    /// <param name="info">The instance of StatIconInfo.</param>
+    /// <param name="icon">A 49x49 texture containing the icon.</param>
+    /// <param name="filterMode">The filter mode for the icon texture. Leave this at its default value unless you have a specific reason to change it.</param>
+    /// <returns>The same StatIconInfo so a chain can continue.</returns>
+    public static StatIconInfo SetIcon(this StatIconInfo info, Texture2D icon, FilterMode? filterMode = null) {
+        info.iconGraphic = icon;
+        if (filterMode.HasValue)
+            info.iconGraphic.filterMode = filterMode.Value;
+        return info;
+    }
+
+    /// <summary>
+    /// Sets the icon that will be displayed for this stat icon when the card is in the player's hand.
+    /// </summary>
+    /// <param name="info">The instance of StatIconInfo.</param>
+    /// <param name="pathToArt">The path to a 49x49 texture containing the icon on disk.</param>
+    /// <param name="filterMode">The filter mode for the icon texture. Leave this at its default value unless you have a specific reason to change it.</param>
+    /// <returns>The same StatIconInfo so a chain can continue.</returns>
+    public static StatIconInfo SetIcon(this StatIconInfo info, string pathToArt, FilterMode? filterMode = null) {
+        info.iconGraphic = TextureHelper.GetImageAsTexture(pathToArt);
+        if (filterMode.HasValue)
+            info.iconGraphic.filterMode = filterMode.Value;
+        return info;
+    }
+
+    /// <summary>
+    /// Set the StatIconInfo's rulebookName and rulebookDescription. Does not make the stat icon appear in the Rulebook.
+    /// </summary>
+    /// <param name="info"></param>
+    /// <param name="rulebookName"></param>
+    /// <param name="rulebookDescription"></param>
+    /// <returns>The same StatIconInfo so a chain can continue.</returns>
+    public static StatIconInfo SetRulebookInfo(this StatIconInfo info, string rulebookName, string rulebookDescription = null) {
+        info.rulebookName = rulebookName;
+        info.rulebookDescription = rulebookDescription;
+        return info;
+    }
+    /// <summary>
+    /// Sets the StatIconInfo's appliesToAttack and appliesToHealth fields. Note these fields don't make the stat icon affect the stat; you still need to implement that logic.
+    /// </summary>
+    /// <param name="info"></param>
+    /// <param name="appliesToAttack">If the stat icon should cover a card's Power.</param>
+    /// <param name="appliesToHealth">If the stat icon should cover a card's Health.</param>
+    /// <returns>The same StatIconInfo so a chain can continue.</returns>
+    public static StatIconInfo SetAppliesToStats(this StatIconInfo info, bool appliesToAttack, bool appliesToHealth) {
+        info.appliesToAttack = appliesToAttack;
+        info.appliesToHealth = appliesToHealth;
+        return info;
+    }
+
+    /// <summary>
+    /// Sets the icon that will be displayed for this stat icon when the card is in the player's hand in Act 2.
+    /// </summary>
+    /// <param name="info">The instance of StatIconInfo.</param>
+    /// <param name="icon">A 16x8 texture containing the icon .</param>
+    /// <param name="filterMode">The filter mode for the icon texture. Leave this at its default value unless you have a specific reason to change it.</param>
+    /// <returns>The same StatIconInfo so a chain can continue.</returns>
+    public static StatIconInfo SetPixelIcon(this StatIconInfo info, Texture2D icon, FilterMode? filterMode = null) {
+        info.pixelIconGraphic = TextureHelper.ConvertTexture(icon, TextureHelper.SpriteType.PixelStatIcon, filterMode ?? FilterMode.Point);
+        return info;
+    }
+    public static StatIconInfo SetPixelIcon(this StatIconInfo info, string pathToArt, FilterMode? filterMode = null) {
+        Texture2D tex = TextureHelper.GetImageAsTexture(pathToArt, filterMode ?? FilterMode.Point);
+        info.pixelIconGraphic = TextureHelper.ConvertTexture(tex, TextureHelper.SpriteType.PixelStatIcon);
+        return info;
+    }
+
+    /// <summary>
+    /// Adds one or more metacategories to the stati icon. Duplicate categories will not be added.
+    /// </summary>
+    /// <param name="info">The instance of StatIconInfo.</param>
+    /// <param name="categories">The metacategories to add.</param>
+    /// <returns>The same StatIconInfo so a chain can continue.</returns>
+    public static StatIconInfo AddMetaCategories(this StatIconInfo info, params AbilityMetaCategory[] categories) {
+        info.metaCategories ??= new();
+        foreach (var app in categories)
+            if (!info.metaCategories.Contains(app))
+                info.metaCategories.Add(app);
+        return info;
+    }
+
+    /// <summary>
+    /// Helper method: automatically adds the Part1Rulebook metacategories to the stat icon.
+    /// </summary>
+    /// <param name="info">The instance of StatIconInfo.</param>
+    /// <returns>The same stati icon so a chain can continue.</returns>
+    public static StatIconInfo SetDefaultPart1Ability(this StatIconInfo info) {
+        return info.AddMetaCategories(AbilityMetaCategory.Part1Rulebook);
+    }
+
+    /// <summary>
+    /// Helper method: automatically adds the Part3Rulebook metacategories to the stat icon.
+    /// </summary>
+    /// <param name="info">The instance of StatIconInfo.</param>
+    /// <returns>The same StatIconInfo so a chain can continue.</returns>
+    public static StatIconInfo SetDefaultPart3Ability(this StatIconInfo info) {
+        return info.AddMetaCategories(AbilityMetaCategory.Part3Rulebook);
+    }
+    #endregion
 
     #region TriggersOncePerStack
     /// <summary>
