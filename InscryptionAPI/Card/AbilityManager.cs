@@ -64,6 +64,9 @@ public static class AbilityManager
         /// <value></value>
         public Texture CustomFlippedTexture { get; internal set; }
 
+        /// <summary>
+        /// The original rulebook description for the ability, before any modifications.
+        /// </summary>
         public string BaseRulebookDescription { get; internal set; }
 
         /// <summary>

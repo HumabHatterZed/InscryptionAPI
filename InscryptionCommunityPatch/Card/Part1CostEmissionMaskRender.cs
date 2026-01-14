@@ -37,15 +37,19 @@ public class Part1CostEmissionMaskRender {
 
     [HarmonyPrefix, HarmonyPatch(typeof(CardDisplayer3D), nameof(CardDisplayer3D.Awake))]
     private static void AddCostEmissionMaskOnAwake(CardDisplayer3D __instance) {
-        Verify3DCostEmissionMaskRenderer(__instance, false);
+        if (SaveManager.SaveFile.IsPart1) {
+            Verify3DCostEmissionMaskRenderer(__instance, false);
+        }
     }
 
     [HarmonyPriority(Priority.Last), HarmonyPostfix, HarmonyPatch(typeof(CardDisplayer3D), nameof(CardDisplayer3D.DisplayInfo))]
     private static void UpdateCostEmissionMask(CardDisplayer3D __instance) {
-        SpriteRenderer rend = Verify3DCostEmissionMaskRenderer(__instance, __instance.emissivePortraitRenderer.gameObject.activeSelf);
-        if (rend != null) {
-            //PatchPlugin.Logger.LogDebug("[UpdateCostEmissionMask] Update Cost emission mask");
-            rend.sprite = __instance.costRenderer.sprite;
+        if (SaveManager.SaveFile.IsPart1) {
+            SpriteRenderer rend = Verify3DCostEmissionMaskRenderer(__instance, __instance.emissivePortraitRenderer.gameObject.activeSelf);
+            if (rend != null) {
+                //PatchPlugin.Logger.LogDebug("[UpdateCostEmissionMask] Update Cost emission mask");
+                rend.sprite = __instance.costRenderer.sprite;
+            }
         }
     }
 }

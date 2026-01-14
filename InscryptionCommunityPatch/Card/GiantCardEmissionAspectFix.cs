@@ -14,7 +14,7 @@ internal class GiantCardEmissionAspectFix {
     /// </summary>
     [HarmonyPostfix, HarmonyPatch(typeof(CardRenderCamera), nameof(CardRenderCamera.TryCreateCameraForLiveRender))]
     private static void FixGiantEmissionCameraAspectRatio(CardRenderCamera __instance, RenderStatsLayer layer) {
-        if (!__instance.liveRenderCameras.ContainsKey(layer) || layer is not RenderLiveStatsLayer live || !live.Giant) {
+        if (!SaveManager.SaveFile.IsPart1 || !__instance.liveRenderCameras.ContainsKey(layer) || layer is not RenderLiveStatsLayer live || !live.Giant) {
             return;
         }
         Transform emissionRenderCam = __instance.liveRenderCameras[layer].transform.Find("EmissionRenderCamera");
