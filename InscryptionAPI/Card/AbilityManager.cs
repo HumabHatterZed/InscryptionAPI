@@ -704,7 +704,7 @@ public static class AbilityManager
                 break;
             }
         }
-        codes.LogCodeInscryptions();
+
         return codes;
     }
 
