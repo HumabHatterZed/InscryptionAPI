@@ -1,3 +1,5 @@
+# 2.23.6
+- Fixed card modifications added to a card's base ice cube card via CardInfo.SetIceCube being ignored
 # 2.23.5
 - Fixed cards appearing as blank outside Act 1
 - Added extension methods for FullAbility that mirror AbilityInfo extension methods

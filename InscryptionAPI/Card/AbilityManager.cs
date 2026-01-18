@@ -4,6 +4,7 @@ using InscryptionAPI.Guid;
 using InscryptionAPI.Helpers;
 using InscryptionAPI.Helpers.Extensions;
 using InscryptionAPI.RuleBook;
+using Sirenix.Utilities;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Reflection;
@@ -683,6 +684,38 @@ public static class AbilityManager
             InscryptionAPIPlugin.Logger.LogError("Cannot find ability " + ability + " for " + info.displayedName);
     }
 
+    [HarmonyPatch(typeof(IceCube), nameof(IceCube.OnDie), MethodType.Enumerator)]
+    [HarmonyTranspiler]
+    private static IEnumerable<CodeInstruction> AddInherentModsToIceCube(IEnumerable<CodeInstruction> instructions) {
+        List<CodeInstruction> codes = new(instructions);
+        
+        for (int i = 0; i < codes.Count; i++) {
+            if (codes[i].opcode == OpCodes.Ldloc_2) {
+                // this probably belongs in the community patches but this transpiler was already here, so eh
+                // overrides the transformer icon so it can display numbers
+                MethodInfo customMethod = AccessTools.Method(typeof(AbilityManager), nameof(AbilityManager.GetIceCubeInfoWithMods),
+                    new Type[] { typeof(IceCube), typeof(string) });
+
+                // ldloc_1 <- IceCube
+                // ldloc_2 <- name
+                // call (customMethod)
+                codes[i + 1] = new(OpCodes.Call, customMethod);
+                codes.Insert(i, new(OpCodes.Ldloc_1));
+                break;
+            }
+        }
+        codes.LogCodeInscryptions();
+        return codes;
+    }
+
+    private static CardInfo GetIceCubeInfoWithMods(IceCube instance, string cardName) {
+        CardInfo info = CardLoader.GetCardByName(cardName);
+        if (instance.Card.Info.iceCubeParams != null && instance.Card.Info.iceCubeParams.creatureWithin != null && instance.Card.Info.iceCubeParams.creatureWithin.mods != null && instance.Card.Info.iceCubeParams.creatureWithin.mods.Count > 0) {
+            info.Mods.AddRange(instance.Card.Info.iceCubeParams.creatureWithin.mods);
+        }
+        return info;
+    }
+
     #region Evolve Changes
     [HarmonyPatch(typeof(Evolve), nameof(Evolve.OnUpkeep), MethodType.Enumerator)]
     [HarmonyTranspiler]
@@ -734,13 +767,6 @@ public static class AbilityManager
         }
         return true;
     }
-    //[HarmonyPrefix, HarmonyPatch(typeof(AbilitiesUtil), nameof(AbilitiesUtil.LoadAbilityIcon))]
-    //private static bool OverrideEvolveAndTransformerIcon(ref Texture __result, string abilityName) {
-    //    if (abilityName.StartsWith("Evolve") || abilityName.StartsWith("Transformer")) {
-    //        return false;
-    //    }
-    //    return true;
-    //}
     private static void OverrideEvolveDerivedIcon(Evolve evolve, int turnsLeftToEvolve)
     {
         if (evolve.Ability == Ability.Evolve)
