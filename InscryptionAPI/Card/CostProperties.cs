@@ -69,6 +69,11 @@ public static class CostProperties
 
     public static ConditionalWeakTable<CardInfo, List<WeakReference<PlayableCard>>> CardInfoToCard = new();
 
+
+    // a table that maps a CardInfo object to a list of weak references to every PlayableCard that uses that same CardInfo
+    public static ConditionalWeakTable<CardInfo, List<WeakReference<PlayableCard>>> CardInfoToPlayableCardReferences = new();
+
+
     /// <summary>
     /// ChangeCardCostGetter patches BloodCost so we can change the cost on the fly
     /// This reverse patch gives us access to the original method without any changes.
@@ -151,6 +156,7 @@ internal static class ChangeCardCostGetter
     public static bool BloodCost(CardInfo __instance, ref int __result)
     {
         PlayableCard card = __instance.GetPlayableCard();
+        //Debug.Log($"{card != null}");
         __result = Mathf.Max(0, card?.BloodCost() ?? CostProperties.OriginalBloodCost(__instance));
         return false;
     }
@@ -196,54 +202,38 @@ internal static class ChangeCardCostGetter
         __result = Mathf.Max(0, energyCost);
         return false;
     }
-}
 
-/*[HarmonyPatch(typeof(DiskCardGame.Card), nameof(DiskCardGame.Card.Info), MethodType.Setter)]
-internal static class Card_SetInfo
-{
-    public static void Postfix(DiskCardGame.Card __instance)
-    {
-        //return;
-        if (__instance is not PlayableCard playableCard)
-            return;
-        
-        CardInfo info = playableCard.Info;
-        
-        if (CostProperties.CardInfoToCard.TryGetValue(info, out List<WeakReference<PlayableCard>> cardList))
-        {
-            PlayableCard card = null;
-            for (int i = cardList.Count - 1; i >= 0; i--)
-            {
-                if (!cardList[i].TryGetTarget(out PlayableCard innerCard) || innerCard == null)
-                {
-                    // NOTE: We store a list of cards so if we don't clear this list then it will fill up forever
-                    cardList.RemoveAt(i);
-                }
-                else if(innerCard == playableCard)
-                {
-                    card = innerCard;
-                }
-            }
-            
-            if (card == null)
-            {
-                cardList.Add(new WeakReference<PlayableCard>(playableCard));
-                if (cardList.Count > 1)
-                {
-                    InscryptionAPIPlugin.Logger.LogWarning($"More than 1 card are using the same card info. This can cause unexpected problems with dynamic costs! {info.displayedName}");
-                }
-            }
-        }
-        else
-        {
-            Debug.Log($"New-un");
-            CostProperties.CardInfoToCard.Add(info, new List<WeakReference<PlayableCard>>()
-            {
-                new WeakReference<PlayableCard>(playableCard)
-            });
-        }
-    }
-}*/
+    //[HarmonyPostfix, HarmonyPatch(typeof(PlayableCard), nameof(PlayableCard.SetInfo))]
+    //private static void GetCardInfoReferences(PlayableCard __instance) {
+
+    //    // if this is a new PlayableCard being associated with the given CardInfo
+    //    // returns true if the CardInfo is in the table
+    //    if (CostProperties.CardInfoToPlayableCardReferences.TryGetValue(__instance.Info, out List<WeakReference<PlayableCard>> connectedCards)) {
+    //        PlayableCard card = null;
+    //        for (int i = connectedCards.Count - 1; i >= 0; i--) {
+    //            // NOTE: We store a list of cards so if we don't clear this list then it will fill up forever
+    //            // remove PlayableCard references that no longer point to anything
+    //            if (!connectedCards[i].TryGetTarget(out PlayableCard cardReference) || cardReference == null) {
+    //                connectedCards.RemoveAt(i);
+    //            }
+    //            else if (cardReference == __instance) {
+    //                card = cardReference;
+    //            }
+    //        }
+
+    //        if (card == null) {
+    //            connectedCards.Add(new WeakReference<PlayableCard>(__instance));
+    //            if (connectedCards.Count > 1) {
+    //                InscryptionAPIPlugin.Logger.LogWarning($"More than 1 card are using the same card info. This can cause unexpected problems with dynamic costs! {__instance.Info.displayedName}");
+    //            }
+    //        }
+    //    }
+    //    else {
+    //        // add CardInfo to table with reference to this PlayableCard
+    //        CostProperties.CardInfoToPlayableCardReferences.Add(__instance.Info, new() { new(__instance) });
+    //    }
+    //}
+}
 
 [HarmonyPatch(typeof(PlayableCard), nameof(PlayableCard.SetInfo))]
 internal static class AddRefreshBehaviourToCard
@@ -251,39 +241,33 @@ internal static class AddRefreshBehaviourToCard
     private static void Postfix(PlayableCard __instance)
     {
         // add the refresh component if it doesn't exist, then set the Card to the calling instance
-        if (__instance.GetComponent<CostProperties.RefreshCostMonoBehaviour>() == null)
-        {
-            __instance.gameObject.AddComponent<CostProperties.RefreshCostMonoBehaviour>().playableCard = __instance;
-            if (CostProperties.CardInfoToCard.TryGetValue(__instance.Info, out List<WeakReference<PlayableCard>> cardList))
-            {
-                PlayableCard card = null;
-                for (int i = cardList.Count - 1; i >= 0; i--)
-                {
-                    // NOTE: We store a list of cards so if we don't clear this list then it will fill up forever
-                    if (!cardList[i].TryGetTarget(out PlayableCard innerCard) || innerCard == null)
-                        cardList.RemoveAt(i);
+        CostProperties.RefreshCostMonoBehaviour refreshCostDisplay = __instance.GetComponent<CostProperties.RefreshCostMonoBehaviour>() ?? __instance.gameObject.AddComponent<CostProperties.RefreshCostMonoBehaviour>();
+        refreshCostDisplay.playableCard = __instance;
 
-                    else if (innerCard == __instance)
-                        card = innerCard;
-                }
+        // if this is a new PlayableCard being associated with the given CardInfo
+        // returns true if the CardInfo is in the table
+        if (CostProperties.CardInfoToCard.TryGetValue(__instance.Info, out List<WeakReference<PlayableCard>> cardList)) {
+            PlayableCard card = null;
+            for (int i = cardList.Count - 1; i >= 0; i--) {
+                // NOTE: We store a list of cards so if we don't clear this list then it will fill up forever
+                // remove PlayableCard references that no longer point to anything
+                if (!cardList[i].TryGetTarget(out PlayableCard innerCard) || innerCard == null)
+                    cardList.RemoveAt(i);
 
-                if (card == null)
-                {
-                    cardList.Add(new WeakReference<PlayableCard>(__instance));
-                    if (cardList.Count > 1)
-                    {
-                        InscryptionAPIPlugin.Logger.LogWarning($"More than 1 card are using the same card info. This can cause unexpected problems with dynamic costs! {__instance.Info.displayedName}");
-                    }
-                }
-            }
-            else
-            {
-                CostProperties.CardInfoToCard.Add(__instance.Info, new List<WeakReference<PlayableCard>>()
-                {
-                    new WeakReference<PlayableCard>(__instance)
-                });
+                else if (innerCard == __instance)
+                    card = innerCard;
             }
 
+            if (card == null) {
+                cardList.Add(new WeakReference<PlayableCard>(__instance));
+                if (cardList.Count > 1) {
+                    InscryptionAPIPlugin.Logger.LogWarning($"More than 1 card are using the same CardInfo. This can cause unexpected problems with dynamic costs! {__instance.Info.displayedName}");
+                }
+            }
+        }
+        else {
+            // add CardInfo to table with reference to this PlayableCard
+            CostProperties.CardInfoToCard.Add(__instance.Info, new() { new (__instance) });
         }
     }
 }
