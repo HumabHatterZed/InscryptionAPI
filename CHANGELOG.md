@@ -3,6 +3,7 @@
 - Fixed PlayableCard.CanPlay not consistently accounting for temporary mod cost adjustments
 - Fixed dynamic play costs not consistently updating
 - Added additional methods for adding specific types of resources to the ResourceBank
+- Added CardSlot.ClearSlotModification extension method
 
 # 2.23.5
 - Fixed cards appearing as blank outside Act 1
