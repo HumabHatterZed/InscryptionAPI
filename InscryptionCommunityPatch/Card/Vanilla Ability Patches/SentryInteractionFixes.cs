@@ -14,7 +14,7 @@ public class SentryInteractionFixes
     [HarmonyPrefix]
     private static bool CardGainAbilityNullCheckPatch(ref PlayableCard otherCard)
     {
-        if (!otherCard.Dead && otherCard.Slot.IsPlayerSlot && Singleton<CardGainAbility>.Instance.RespondsToOtherCardDrawn(otherCard) && !otherCard.HasAbility(Singleton<TotemTriggerReceiver>.Instance.Data.bottom.effectParams.ability))
+        if (otherCard != null && !otherCard.Dead && otherCard.Slot.IsPlayerSlot && Singleton<CardGainAbility>.Instance.RespondsToOtherCardDrawn(otherCard) && !otherCard.HasAbility(Singleton<TotemTriggerReceiver>.Instance.Data.bottom.effectParams.ability))
             return !otherCard.Info.Mods.Exists((CardModificationInfo x) => x.fromEvolve);
 
         return false;
