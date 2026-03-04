@@ -487,8 +487,25 @@ public static class AbilityExtensions
     /// <returns>The same AbilityInfo so a chain can continue.</returns>
     public static AbilityInfo ResetDescription(this AbilityInfo abilityInfo)
     {
-        abilityInfo.rulebookDescription = AllAbilities.Find(x => x.Info == abilityInfo).BaseRulebookDescription;
+        abilityInfo.rulebookDescription = AllAbilities.AbilityByID(abilityInfo.ability).BaseRulebookDescription;
         return abilityInfo;
+    }
+
+    public static FullAbility SetPart1Rulebook(this FullAbility full) {
+        full.Info.AddMetaCategories(AbilityMetaCategory.Part1Rulebook);
+        return full;
+    }
+    public static FullAbility SetPart3Rulebook(this FullAbility full) {
+        full.Info.AddMetaCategories(AbilityMetaCategory.Part3Rulebook);
+        return full;
+    }
+    public static FullAbility SetGrimoraRulebook(this FullAbility full) {
+        full.Info.AddMetaCategories(AbilityMetaCategory.GrimoraRulebook);
+        return full;
+    }
+    public static FullAbility SetMagnificusRulebook(this FullAbility full) {
+        full.Info.AddMetaCategories(AbilityMetaCategory.MagnificusRulebook);
+        return full;
     }
 
     public static bool HasMetaCategories(this AbilityInfo info, params AbilityMetaCategory[] categories)
