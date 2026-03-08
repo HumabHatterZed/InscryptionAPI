@@ -32,7 +32,7 @@ public static partial class CardExtensions
     public static int BloodCost(this PlayableCard card)
     {
         //Debug.Log($"{card != null} {card?.Info != null} [{card?.GetType()}] {(card as DiskCardGame.Card)?.Info != null}");
-        if (card && card.Info)
+        if (card != null && card.Info != null)
         {
             int originalBloodCost = CostProperties.CostProperties.OriginalBloodCost(card.Info);
             if (card.IsUsingBlueGem() && CostProperties.CostProperties.ReduceGemifiedBlood(card, originalBloodCost))
@@ -45,7 +45,7 @@ public static partial class CardExtensions
             return originalBloodCost;
         }
 
-        InscryptionAPIPlugin.Logger.LogError("[BloodCost] Couldn't find Card or CardInfo for blood cost??? How is this possible?");
+        InscryptionAPIPlugin.Logger.LogWarning("[BloodCost] Couldn't find PlayableCard or CardInfo, returning 0");
         return 0;
     }
 
@@ -55,7 +55,7 @@ public static partial class CardExtensions
     /// </summary>
     public static int BonesCost(this PlayableCard card)
     {
-        if (card && card.Info)
+        if (card != null && card.Info != null)
         {
             int originalBonesCost = CostProperties.CostProperties.OriginalBonesCost(card.Info);
             if (card.IsUsingBlueGem() && CostProperties.CostProperties.ReduceGemifiedBones(card, originalBonesCost))
@@ -68,7 +68,7 @@ public static partial class CardExtensions
             return originalBonesCost;
         }
 
-        InscryptionAPIPlugin.Logger.LogError("Couldn't find Card or CardInfo for bone cost??? How is this possible?");
+        InscryptionAPIPlugin.Logger.LogWarning("[BonesCost] Couldn't find PlayableCard or CardInfo, returning 0");
         return 0;
     }
 
@@ -78,8 +78,10 @@ public static partial class CardExtensions
     /// </summary>
     public static List<GemType> GemsCost(this PlayableCard card)
     {
-        if (card?.Info == null)
+        if (card != null && card.Info != null) {
+            InscryptionAPIPlugin.Logger.LogWarning("[GemsCost] Couldn't find PlayableCard or CardInfo, returning empty list");
             return new();
+        }
 
         List<CardModificationInfo> mods = card.TemporaryMods.Concat(card.Info.Mods).ToList();
         if (mods.Exists(x => x.nullifyGemsCost))

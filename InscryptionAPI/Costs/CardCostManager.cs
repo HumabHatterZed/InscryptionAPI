@@ -324,18 +324,17 @@ public static class CardCostManager
 
     #region Patches
     [HarmonyPostfix, HarmonyPatch(typeof(PlayableCard), nameof(PlayableCard.CanPlay))]
-    private static void CanPlayCustomCosts(ref bool __result, ref PlayableCard __instance)
-    {
-        if (!__result)
-            return;
-
-        foreach (CustomCardCost cost in __instance.GetCustomCardCosts())
-        {
-            FullCardCost fullCost = AllCustomCosts.CostByBehaviour(cost.GetType());
-            if (!cost.CostSatisfied(__instance.GetCustomCost(fullCost), __instance))
-            {
-                __result = false;
-                return;
+    private static void CanPlayCustomCosts(ref bool __result, ref PlayableCard __instance) {
+        if (__instance.BloodCost() <= Singleton<BoardManager>.Instance.AvailableSacrificeValue && __instance.BonesCost() <= Singleton<ResourcesManager>.Instance.PlayerBones && __instance.EnergyCost <= Singleton<ResourcesManager>.Instance.PlayerEnergy && __instance.GemsCostRequirementMet()) {
+            if (Singleton<BoardManager>.Instance.SacrificesCreateRoomForCard(__instance, Singleton<BoardManager>.Instance.PlayerSlotsCopy)) {
+                foreach (CustomCardCost cost in __instance.GetCustomCardCosts()) {
+                    FullCardCost fullCost = AllCustomCosts.CostByBehaviour(cost.GetType());
+                    if (!cost.CostSatisfied(__instance.GetCustomCost(fullCost), __instance)) {
+                        __result = false;
+                        return;
+                    }
+                }
+                __result = true;
             }
         }
     }

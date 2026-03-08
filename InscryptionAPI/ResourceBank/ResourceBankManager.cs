@@ -1,3 +1,4 @@
+using DiskCardGame;
 using HarmonyLib;
 using UnityEngine;
 
@@ -13,15 +14,6 @@ public static class ResourceBankManager
     }
 
     private static readonly List<ResourceData> CustomResources = new();
-
-    public static ResourceData AddDecal(string pluginGUID, string resourceName, Texture decalTexture, bool overrideExistingAsset = false)
-    {
-        return Add(pluginGUID, new ResourceBank.Resource()
-        {
-            path = $"Art/Cards/Decals/{resourceName}",
-            asset = decalTexture
-        }, overrideExistingAsset);
-    }
 
     public static ResourceData Add(string pluginGUID, string path, UnityObject unityObject, bool overrideExistingAsset = false)
     {
@@ -54,6 +46,89 @@ public static class ResourceBankManager
 
         CustomResources.Add(resourceData);
         return resourceData;
+    }
+
+    /// <summary>
+    /// Adds a custom GameObject resource located at the path Inscryption uses to retrieve Prefabs when instantiating weights for the scales.
+    /// </summary>
+    /// <param name="pluginGUID">The GUID of the plugin adding the resource.</param>
+    /// <param name="resourceName">The name used to identify the resource. Used when retrieving it from the ResourceBank</param>
+    /// <param name="eventPrefab">The scales weight GameObject.</param>
+    /// <param name="overrideExistingAsset">If we should override any existing asset that shares this resource's path.</param>
+    public static ResourceData AddScaleWeightPrefab(string pluginGUID, string resourceName, GameObject prefab, bool overrideExistingAsset = false) {
+        return Add(pluginGUID, "Prefabs/Environment/ScaleWeights/" + resourceName, prefab, overrideExistingAsset);
+    }
+
+    /// <summary>
+    /// Adds a custom GameObject resource located at the path Inscryption uses to retrieve Prefabs when instantiating card battle idle events, eg, the spider.
+    /// </summary>
+    /// <remarks>
+    /// Note: Object must have a CardBattleIdleEvent component attached.
+    /// </remarks>
+    /// <param name="pluginGUID">The GUID of the plugin adding the resource.</param>
+    /// <param name="resourceName">The name used to identify the resource. Used when retrieving it from the ResourceBank</param>
+    /// <param name="eventPrefab">The GameObject for the CardBattleIdleEvent.</param>
+    /// <param name="overrideExistingAsset">If we should override any existing asset that shares this resource's path.</param>
+    public static ResourceData AddCardBattleIdleEvent(string pluginGUID, string resourceName, GameObject eventPrefab, bool overrideExistingAsset = false) {
+        return Add(pluginGUID, "Prefabs/Environment/CardBattleIdleEvents/" + resourceName, eventPrefab, overrideExistingAsset);
+    }
+
+    /// <summary>
+    /// Adds a custom GameObject resource located at the path Inscryption uses to retrieve Prefabs when instantiating first person animations.
+    /// </summary>
+    /// <remarks>
+    /// Note: The game checks the Prefab's children for the Animator and FirstPersonAnimatorObject.
+    /// </remarks>
+    /// <param name="pluginGUID">The GUID of the plugin adding the resource.</param>
+    /// <param name="resourceName">The name used to identify the resource. Used when retrieving it from the ResourceBank</param>
+    /// <param name="animPrefab">The table effect GameObject.</param>
+    /// <param name="overrideExistingAsset">If we should override any existing asset that shares this resource's path.</param>
+    public static ResourceData AddFirstPersonAnimation(string pluginGUID, string resourceName, GameObject animPrefab, bool overrideExistingAsset = false) {
+        return Add(pluginGUID, "Prefabs/FirstPersonAnimations/" + resourceName, animPrefab, overrideExistingAsset);
+    }
+
+    /// <summary>
+    /// Adds a custom GameObject resource located at the path Inscryption uses to retrieve Prefabs when instantiating table effects, ie, during boss fights.
+    /// </summary>
+    /// <param name="pluginGUID">The GUID of the plugin adding the resource.</param>
+    /// <param name="resourceName">The name used to identify the resource. Used when retrieving it from the ResourceBank</param>
+    /// <param name="tableEffectPrefab">The table effect GameObject.</param>
+    /// <param name="overrideExistingAsset">If we should override any existing asset that shares this resource's path.</param>
+    public static ResourceData AddTableEffect(string pluginGUID, string resourceName, GameObject tableEffectPrefab, bool overrideExistingAsset = false) {
+        return Add(pluginGUID, "Prefabs/Environment/TableEffects/" + resourceName, tableEffectPrefab, overrideExistingAsset);
+    }
+
+    /// <summary>
+    /// Adds a custom GameObject resource located at the path Inscryption uses to retrieve Prefabs when generating map scenery.
+    /// </summary>
+    /// <param name="pluginGUID">The GUID of the plugin adding the resource.</param>
+    /// <param name="resourceName">The name used to identify the resource. Used when retrieving it from the ResourceBank</param>
+    /// <param name="sceneryPrefab">The map scenery GameObject.</param>
+    /// <param name="overrideExistingAsset">If we should override any existing asset that shares this resource's path.</param>
+    public static ResourceData AddMapScenery(string pluginGUID, string resourceName, GameObject sceneryPrefab, bool overrideExistingAsset = false) {
+        return Add(pluginGUID, SceneryData.PREFABS_ROOT + resourceName, sceneryPrefab, overrideExistingAsset);
+    }
+
+    /// <summary>
+    /// Adds a custom Texture resource located at the path Inscryption uses to retrieve ability icons.
+    /// </summary>
+    /// <param name="pluginGUID">The GUID of the plugin adding the resource.</param>
+    /// <param name="resourceName">The name used to identify the resource. Used when retrieving it from the ResourceBank</param>
+    /// <param name="iconTexture">The ability icon's texture.</param>
+    /// <param name="overrideExistingAsset">If we should override any existing asset that shares this resource's path.</param>
+    public static ResourceData AddAbilityIcon(string pluginGUID, string resourceName, Texture iconTexture, bool overrideExistingAsset = false) {
+        return Add(pluginGUID, "Art/Cards/AbilityIcons/" + resourceName, iconTexture, overrideExistingAsset);
+    }
+
+    /// <summary>
+    /// Adds a custom Texture resource located at the path Inscryption uses to retrieve card decal textures.
+    /// </summary>
+    /// <param name="pluginGUID">The GUID of the plugin adding the resource.</param>
+    /// <param name="resourceName">The name used to identify the resource. Used when retrieving it from the ResourceBank</param>
+    /// <param name="decalTexture">The decal texture.</param>
+    /// <param name="overrideExistingAsset">If we should override any existing asset that shares this resource's path.</param>
+    public static ResourceData AddDecal(string pluginGUID, string resourceName, Texture decalTexture, bool overrideExistingAsset = false) {
+        return Add(pluginGUID, "Art/Cards/Decals/" + resourceName, decalTexture, overrideExistingAsset);
     }
 
     [HarmonyPatch(typeof(ResourceBank), "Awake", new Type[] { })]

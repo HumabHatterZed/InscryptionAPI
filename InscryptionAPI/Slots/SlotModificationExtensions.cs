@@ -84,10 +84,18 @@ public static class SlotModificationExtensions
     }
 
     /// <summary>
+    /// Clears the slot modification in this CardSlot, if one is present.
+    /// </summary>
+    /// <param name="slot">The slot to assign the modification to.</param>
+    public static IEnumerator ClearSlotModification(this CardSlot slot) {
+        yield return slot.SetSlotModification(ModificationType.NoModification);
+    }
+
+    /// <summary>
     /// Assigns a new slot modification to a slot.
     /// </summary>
-    /// <param name="slot">The slot to assign the modification to</param>
-    /// <param name="modType">The modification type to assign</param>
+    /// <param name="slot">The slot to assign the modification to.</param>
+    /// <param name="modType">The modification type to assign.</param>
     public static IEnumerator SetSlotModification(this CardSlot slot, ModificationType modType)
     {
         if (slot == null)
