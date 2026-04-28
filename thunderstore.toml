@@ -6,7 +6,7 @@ namespace = "API_dev"
 name = "API"
 versionNumber = "2.15.2"
 description = "The de-facto standard core API for all Inscryption mods. This lets you create new cards, abilities, challenges, map nodes, starter decks, and more."
-websiteUrl = "https://github.com/ScottWilson0903/InscryptionAPI"
+websiteUrl = "https://github.com/InscryptionModding/InscryptionAPI/"
 containsNsfwContent = false
 
 [package.dependencies]
