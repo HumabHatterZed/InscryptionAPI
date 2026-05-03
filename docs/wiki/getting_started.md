@@ -9,7 +9,8 @@ To begin, we'll go over how to install BepInEx, the framework all Inscryption mo
 
 If you have issues with ModmManagers head to one of these discords;
 
-* **Thunderstore/R2ModMan Support Discord:** [Here](https://discord.gg/Fbz54kQAxg)
+* **Thunderstore Support Discord:** [Here](https://discord.gg/Fbz54kQAxg)
+* **R2ModMan Support Discord:** [Here](https://discord.gg/R85wjqa4WN)
 * **Gale Mod Manager Support Discord:** [Here](https://discord.gg/sfuWXRfeTt)
 
 ### Installing Manually
