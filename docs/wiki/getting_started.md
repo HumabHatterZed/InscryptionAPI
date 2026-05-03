@@ -23,6 +23,7 @@ If you have issues with Mod Managers head to one of these discords;
 7. Move the contents of the `plugins` folder into `BepInEx/plugins` and the contents of the `monomod` folder into the `BepInEx/monomod` folder.
 8. Run the game again. If everything runs correctly, a message will appear in the console telling you that the API was loaded.
 9. For any additional mods create a new subfolder, it can be called anything and extract the zips archive into it and if there is a `BepInEx` folder within the zip instead drop the contents of that folder into the `BepInEx` root for the modding instance. EX;
+
 ```
 BepInEx // These go within the BepInEx root folder
 |-- config
@@ -39,6 +40,7 @@ README.md           |-- These can be ignored but if you want to keep them put th
 CHANGELOG.md        |--
 icon.png          --|
 ```
+
 10. Run the game once more and everything should be correct and working.
 
 ### Installing Manually (XBOX Game-Pass)
@@ -51,6 +53,7 @@ icon.png          --|
 7. Move the contents of the `plugins` folder into `BepInEx/plugins` and the contents of the `monomod` folder into the `BepInEx/monomod` folder.
 8. Run the game again. If everything runs correctly, a message will appear in the console telling you that the API was loaded.
 9. For any additional mods create a new subfolder, it can be called anything and extract the zips archive into it and if there is a `BepInEx` folder within the zip instead drop the contents of that folder into the `BepInEx` root for the modding instance. EX;
+
 ```
 BepInEx // These go within the BepInEx root folder
 |-- config
@@ -67,6 +70,7 @@ README.md           |-- These can be ignored but if you want to keep them put th
 CHANGELOG.md        |--
 icon.png          --|
 ```
+
 10. Run the game once more and everything should be correct and working.
 
 ### Installing on the Steam Deck
