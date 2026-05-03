@@ -7,7 +7,7 @@ To begin, we'll go over how to install BepInEx, the framework all Inscryption mo
 2. Click the **Install with Mod Manager** button on the top of [BepInEx's](https://thunderstore.io/c/inscryption/p/BepInEx/BepInExPack_Inscryption/) page.
 3. Run the game via the mod manager.
 
-If you have issues with ModmManagers head to one of these discords;
+If you have issues with Mod Managers head to one of these discords;
 
 * **Thunderstore Support Discord:** [Here](https://discord.gg/Fbz54kQAxg)
 * **R2ModMan Support Discord:** [Here](https://discord.gg/R85wjqa4WN)
