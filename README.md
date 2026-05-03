@@ -74,7 +74,7 @@ icon.png          --|
 4. Install [MonoModLoader](<https://inscryption.thunderstore.io/package/BepInEx/MonoMod_Loader_Inscryption/>) and extract the contents into a folder.
 5. Move the contents of the `patchers` folder into `BepInEx/patchers` (If any of the mentioned BepInEx folders don't exist, just create them).
 6. Install [Inscryption API](<https://inscryption.thunderstore.io/package/API_dev/API/>) and extract the contents into a folder.
-7. Move the contents of the 'plugins' folder into `BepInEx/plugins` and the contents of the `monomod` folder into the `BepInEx/monomod` folder.
+7. Move the contents of the `plugins` folder into `BepInEx/plugins` and the contents of the `monomod` folder into the `BepInEx/monomod` folder.
 8. Run the game again. If everything runs correctly, a message will appear in the console telling you that the API was loaded.
 9. For any additional mods create a new subfolder, it can be called anything and extract the zips archive into it and if there is a `BepInEx` folder within the zip instead drop the contents of that folder into the `BepInEx` root for the modding instance. EX;
 ```
